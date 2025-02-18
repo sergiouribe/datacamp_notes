@@ -1,0 +1,28 @@
+---
+title: "02_importing_intermediate_datacamp"
+author: "Sergio Uribe"
+format: html
+editor: visual
+---
+
+# Jsonlite
+
+```{r}
+pacman::p_load(jsonlite)
+```
+
+```{r}
+# jsonlite is already loaded
+
+# Challenge 1
+json1 <- '[[1, 2], [3, 4]]'
+fromJSON(json1)
+
+
+```
+
+```{r}
+# Challenge 2
+json2 <- '[{"a": 1, "b": 2}, {"a": 3, "b": 4},  {"a": 5, "b": 6}]'
+fromJSON(json2)
+```
