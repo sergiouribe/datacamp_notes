@@ -5,6 +5,101 @@ format: html
 editor: visual
 ---
 
+# Relational databases
+
+DBMS: MySQL, PosgreSQL, Oracle, etc RMySQL RPotgrsSQL ROracle, etc
+
+```{r}
+# Load the DBI package
+library(DBI)
+
+# Edit dbConnect() call
+con <- dbConnect(RMySQL::MySQL(), 
+                 dbname = "tweater", 
+                 host = "courses.csrrinzqubik.us-east-1.rds.amazonaws.com", 
+                 port = 3306,
+                 user = "student",
+                 password = "datacamp")
+
+# tables
+tables <- dbReadTable(con)
+
+# Import the users table from tweater: users
+users <- dbReadTable(con, "users")
+
+# Print users
+users
+
+# Import all tables
+tables <- lapply(c("users", "tweats"), 
+				 dbReadTable, 
+				 conn = con)
+
+# Print out tables
+tables
+
+--------------
+# Get table names
+table_names <- dbListTables(con)
+
+# Import all tables
+tables <- lapply(table_names, dbReadTable, conn = con) # import all tables
+
+-----------------
+# Import tweat_id column of comments where user_id is 1: elisabeth
+elisabeth <- dbGetQuery(con, "SELECT tweat_id FROM comments WHERE user_id = '1'")
+
+# Print elisabeth
+elisabeth
+```
+
+**Connecting to a Database**: You used the *dbConnect()* function from the DBI package to establish a connection to a MySQL database, specifying necessary details like database name, host, port, user, and password.
+
+**Listing Database Tables**: The *dbListTables()* function was introduced, which requires a connection object and returns a list of all tables in the database. This function helps in understanding the structure of the database you're working with.
+
+**Importing Table Data**: You learned how to import data from a specific table using the *dbReadTable()* function. By passing the connection object and the table name, you can retrieve the entire table as a data frame in R, maintaining the original structure and contents of the table.
+
+**Efficient Table Importing**: The lesson also covered how to efficiently import multiple tables using the *lapply()* function to apply dbReadTable() across a list of table names, minimizing code duplication and streamlining the data import process.
+
+**Disconnecting from a Database**: Finally, the importance of cleanly disconnecting from the database was emphasized using the *dbDisconnect()* function, ensuring resources are freed and the connection is properly closed.
+
+## Working with huge databases: Send - Fetch - Clear
+
+```{r}
+# Connect to the database
+library(DBI)
+con <- dbConnect(RMySQL::MySQL(),
+                 dbname = "tweater",
+                 host = "courses.csrrinzqubik.us-east-1.rds.amazonaws.com",
+                 port = 3306,
+                 user = "student",
+                 password = "datacamp")
+
+# Send query to the database
+# Inspect the dbSendQuery() call that has already been coded for you. It selects the comments for the users with an id above 4.
+
+res <- dbSendQuery(con, "SELECT * FROM comments WHERE user_id > 4")
+
+# Use dbFetch() twice
+# Use dbFetch() twice. In the first call, import only two records of the query result by setting the n argument to 2. In the second call,  import all remaining queries (don't specify n). In both calls, simply print the resulting data frames.
+
+dbFetch(res, n = 2)
+
+dbFetch(res)
+
+
+# Clear res
+dbClearResult(res)
+```
+
+# Connect to the MySQL database: con
+
+con \<- dbConnect(RMySQL::MySQL(), dbname = "tweater", host = "host_name", port = 3306, user = "user_name", password = "password")
+
+# Import the users table: users
+
+users \<- dbReadTable(con, "users") This lesson provided a foundational understanding of working with databases in R, setting the stage for more advanced data manipulation and analysis tasks.
+
 # Jsonlite
 
 ```{r}
