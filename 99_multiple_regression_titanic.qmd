@@ -1,0 +1,74 @@
+---
+title: "Multiple regression"
+author: "Sergio Uribe"
+format: html
+editor: visual
+---
+
+```{r}
+pacman::p_load(tidyverse, 
+               sjPlot, 
+               carData, # for the dataset
+               gtsummary, 
+               performance, # For assessing the performance of models and predictions
+               ggeffects, # For computing and visualizing marginal effects from regression models
+               vip, # For creating variable importance plots for machine learning models
+               Epi          # For epidemiological data analysis and visualization)
+)
+```
+
+```{r}
+set_theme(theme_minimal())
+```
+
+```{r}
+# get data
+df <- carData::TitanicSurvival
+```
+
+```{r}
+df <- df |> 
+  filter(!(is.na(age)))
+```
+
+```{r}
+# the model
+model <- glm(formula = survived ~age + sex + passengerClass, 
+             data = df, 
+             family = binomial)
+```
+
+```{r}
+# check assumptions
+performance::check_model(model)
+```
+
+```{r}
+# visualize predictions
+ggeffects::ggeffect(model) |> 
+                      plot() |> 
+  sjPlot::plot_grid()
+```
+
+```{r}
+# get table with posthoc tests + ORs
+model |> 
+  gtsummary::tbl_regression(exponentiate = T, 
+                            add_pairwise_contrasts = T)
+```
+
+```{r}
+# get variable importance
+vip::vip(model)
+```
+
+```{r}
+# check model quality
+performance::performance(model)
+```
+
+```{r}
+# create ROC curve
+Epi::ROC(form = survived ~fitted.values(model), 
+         data = df)
+```
