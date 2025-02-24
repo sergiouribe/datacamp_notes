@@ -1,0 +1,31 @@
+[33mcommit 4e7680cb7bf48bcd5bb0db773f92c8f2e90a3cc5[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: Sergio Uribe <sergio.uribe@gmail.com>
+Date:   Mon Feb 24 13:44:29 2025 +0200
+
+    deleted file 13:44
+    
+    deleted files and expect that history as well
+
+[33mcommit 8a895f13f997c54b2f66536b4ed6dfca59fbd867[m
+Author: Sergio Uribe <sergio.uribe@gmail.com>
+Date:   Mon Feb 24 12:48:26 2025 +0200
+
+    cleaning data
+
+[33mcommit 99e888dfb836985b26d1039f47e1a10cac718c04[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Sergio Uribe <sergio.uribe@gmail.com>
+Date:   Thu Feb 20 09:08:07 2025 +0200
+
+    multiple regression
+
+[33mcommit 73f3d0a75fb58ace7356fa1c41bb85b6cefdefc2[m
+Author: Sergio Uribe <sergio.uribe@gmail.com>
+Date:   Wed Feb 19 15:29:48 2025 +0200
+
+    relational databases
+
+[33mcommit 9eac1d908a1fe31698b7662a2a059bb188b12943[m
+Author: Sergio Uribe <sergio.uribe@gmail.com>
+Date:   Tue Feb 18 18:31:03 2025 +0200
+
+    first commit intermediate importing, datacamp
