@@ -1,0 +1,35 @@
+---
+title: "03 Modelling with Tidyverse"
+author: "Sergio Uribe"
+format: html
+editor: visual
+---
+
+## 
+
+```{r}
+pacman::p_load(tidyverse, 
+               tidymodels, 
+               performance, 
+               kaggler)
+```
+
+-   **Multiple Regression**: how to use both numerical and categorical variables in your regression models.
+
+-   **Log Transformation**: log transformations to both house price and size to stabilize variance and make relationships more linear.
+
+-   **Exploratory Data Analysis (EDA)**: the relationship between log10_price and house condition, noting trends and variations.
+
+-   **Parallel Slopes Model**: fit a model where different groups (house conditions) have the same slope but different intercepts.
+
+```{r}
+# Fit model
+model_price_4 <- lm(log10_price ~ log10_size + waterfront, data = house_prices)
+
+# Get regression table
+get_regression_table(model_price_4)
+```
+
+## Predicting house using size and condition
+
+several intercepts, same slopes
