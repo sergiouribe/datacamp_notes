@@ -1,0 +1,100 @@
+---
+title: "03_data_cleaning"
+format: html
+editor: visual
+---
+
+```{r}
+pacman::p_load(tidyverse, 
+               janitor) 
+```
+
+# **Detecting inconsistent text data**
+
+```{r}
+# Filter for rows with "-" in the phone column
+sfo_survey %>%
+  filter(str_detect(phone, "-"))
+```
+
+```{r}
+# Filter for rows with "(" or ")" in the phone column
+sfo_survey %>%
+  filter(str_detect(phone, fixed("(")) | str_detect(phone, fixed(")")))
+```
+
+# **Replacing and removing**
+
+```{r}
+# Remove parentheses from phone column
+phone_no_parens <- sfo_survey$phone %>%
+  # Remove "("s
+  str_remove_all(fixed("(")) %>%
+  # Remove ")"s
+  str_remove_all(fixed(")"))
+```
+
+```{r}
+nyc_temps <-  
+  read_delim("https://raw.githubusercontent.com/corytophanes/BIO_BIT_Bioinformatics_209/refs/heads/main/ref_files_pdfs/nyc_temps.txt")
+```
+
+```{r}
+glimpse(nyc_temps)
+```
+```{r}
+nyc_temps_long <- nyc_temps %>%
+  pivot_longer(
+    cols = -YEAR,  # Keep YEAR as identifier
+    names_to = "MONTH",  # Create a column for months
+    values_to = "TEMPERATURE"  # Store temperatures in this column
+  )  |> 
+ mutate(MONTH = match(MONTH, toupper(month.abb)),  # Convert month abbreviation to numeric
+         DATE = as.Date(paste(YEAR, MONTH, "01", sep = "-")))  # Merge YEAR and MONTH into a date
+         
+
+
+
+
+```
+
+```{r}
+nyc_temps_long |> 
+  
+  # filter(MONTH != NA) |> 
+  ggplot(aes(x = as.factor(MONTH), y = TEMPERATURE, color = YEAR)) +
+  geom_jitter(alpha = .5) +
+  labs(
+    title = "Temperature Variations by Month",
+    x = "Month",
+    y = "Temperature (°C)",
+    color = "Year"
+  )
+```
+```{r}
+nyc_temps_long |> 
+  tabyl(MONTH)
+  
+```
+
+# Dates
+
+```{r}
+# Check out the accounts data frame
+head(accounts)
+
+# Define the date formats
+formats <- c("%Y-%m-%d", "%B %d, %Y")
+
+# Convert dates to the same format
+accounts %>%
+  mutate(date_opened_clean = parse_date_time(date_opened, formats))
+```
+
+
+```{r}
+# convert yen to usd
+accounts %>%
+  mutate(total_usd = ifelse(total > 1000000, total / 104, total))
+```
+
