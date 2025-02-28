@@ -42,6 +42,7 @@ nyc_temps <-
 ```{r}
 glimpse(nyc_temps)
 ```
+
 ```{r}
 nyc_temps_long <- nyc_temps %>%
   pivot_longer(
@@ -71,6 +72,7 @@ nyc_temps_long |>
     color = "Year"
   )
 ```
+
 ```{r}
 nyc_temps_long |> 
   tabyl(MONTH)
@@ -91,10 +93,42 @@ accounts %>%
   mutate(date_opened_clean = parse_date_time(date_opened, formats))
 ```
 
-
 ```{r}
 # convert yen to usd
 accounts %>%
   mutate(total_usd = ifelse(total > 1000000, total / 104, total))
 ```
 
+# Missing Values
+
+```{r}
+pacman::p_load(tidyverse, 
+               visdat)
+```
+
+```{r}
+data("airquality")
+```
+
+```{r}
+sum(is.na(airquality))
+```
+
+```{r}
+visdat::vis_miss(airquality)
+```
+
+```{r}
+airquality |> 
+  mutate(miss_ozone = is.na(Ozone)) |> 
+  group_by(miss_ozone) |> 
+  summarize(across(everything(), median, na.rm = T))
+```
+
+```{r}
+airquality |> 
+  arrange(desc(Ozone)) |> 
+  vis_miss()
+```
+
+![](images/clipboard-560287637.png)
