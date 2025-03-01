@@ -132,3 +132,43 @@ airquality |>
 ```
 
 ![](images/clipboard-560287637.png)
+
+# Comparing strings
+
+## Types of edit distance
+
+![](images/clipboard-454113606.png)
+
+```{r}
+pacman::p_load(stringdist)
+```
+
+```{r}
+stringdist::stringdist("baboon", 
+                       "typhoon", 
+                       method = "dl")
+```
+
+```{r}
+# LCS
+stringdist::stringdist("baboon", 
+                       "typhoon", 
+                       method = "lcs")
+```
+
+```{r}
+# jaccard
+stringdist::stringdist("baboon", 
+                       "typhoon", 
+                       method = "jaccard")
+```
+
+## fussyjoin
+
+```{r}
+pacman::p_load(fuzzyjoin)
+```
+
+![](images/clipboard-466977798.png)
+
+![](images/clipboard-672267679.png)
