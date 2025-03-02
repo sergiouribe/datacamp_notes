@@ -172,3 +172,42 @@ pacman::p_load(fuzzyjoin)
 ![](images/clipboard-466977798.png)
 
 ![](images/clipboard-672267679.png)
+
+# Record linkage
+
+![](images/clipboard-231128390.png)
+
+```{r}
+pacman::p_load(reclin2)
+```
+
+Read <https://cran.r-project.org/web/packages/reclin2/vignettes/introduction.html>
+
+```{r}
+data("linkexample1", "linkexample2")
+```
+
+```{r}
+print(linkexample1)
+```
+
+```{r}
+print(linkexample2)
+```
+
+## Step 1 Generate pairs
+
+```{r}
+ pairs <- pair_blocking(linkexample1, linkexample2, "postcode")
+ print(pairs)
+```
+
+## **Step 2: compare pairs**
+
+```{r}
+pairs <- compare_pairs(pairs, on = c("lastname", "firstname", "address", "sex"))
+```
+
+```{r}
+print(pairs)
+```
