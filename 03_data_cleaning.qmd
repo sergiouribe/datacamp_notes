@@ -5,8 +5,10 @@ editor: visual
 ---
 
 ```{r}
-pacman::p_load(tidyverse, 
-               janitor) 
+pacman::p_load(tidyverse,
+               tibble, 
+               janitor, 
+               reclin2 ) # for record linkage) 
 ```
 
 # **Detecting inconsistent text data**
@@ -175,11 +177,25 @@ pacman::p_load(fuzzyjoin)
 
 # Record linkage
 
+-   **Record Linkage Basics**: You discovered that record linkage involves cleaning datasets, generating pairs of records to compare, scoring these pairs based on similarity, and finally linking the most similar pairs.
+
+-   **Generating Pairs**: Using the `reclin2` package in R, you learned how to generate all possible pairs of records between two data frames. You saw firsthand how this could lead to a large number of comparisons, making the process inefficient for large datasets.
+
+-   **Blocking to Reduce Comparisons**: To make the process more scalable, you applied the concept of blocking. By only generating pairs that match on a specified blocking variable (e.g., the state column), you significantly reduced the number of pairs to compare. This was achieved with the `pair_blocking` function, specifying the `blocking_var` argument.
+
+-   **Comparing Pairs**: You explored how to compare pairs of records by using the `compare_pairs` function from the `reclin2` package. You learned to specify which columns to compare and how to compare them using different string comparison methods, such as the longest common subsequence (LCS) method. For example:
+
+```         
+pairs %>% compare_pairs(by = "name", default_comparator = lcs())
+```
+
 ![](images/clipboard-231128390.png)
 
 ```{r}
 pacman::p_load(reclin2)
 ```
+
+![](images/clipboard-1333049409.png)
 
 Read <https://cran.r-project.org/web/packages/reclin2/vignettes/introduction.html>
 
@@ -195,14 +211,14 @@ print(linkexample1)
 print(linkexample2)
 ```
 
-## Step 1 Generate pairs
+### Step 1 Generate pairs
 
 ```{r}
  pairs <- pair_blocking(linkexample1, linkexample2, "postcode")
  print(pairs)
 ```
 
-## **Step 2: compare pairs**
+### **Step 2: compare pairs**
 
 ```{r}
 pairs <- compare_pairs(pairs, on = c("lastname", "firstname", "address", "sex"))
@@ -210,4 +226,120 @@ pairs <- compare_pairs(pairs, on = c("lastname", "firstname", "address", "sex"))
 
 ```{r}
 print(pairs)
+```
+
+```{r}
+
+# Generate pairs
+pairs |> 
+  # Compare pairs by name, phone, addr
+  compare_pairs(on = c("lastname", "postcode", "address"),
+                       default_comparator = cmp_jaccard(threshold = 0.5)  )
+```
+
+## **Scoring and linking**
+
+![![](images/clipboard-3103731353.png)](images/clipboard-3552853818.png)
+
+![](images/clipboard-4265653364.png)
+
+![](images/clipboard-2604538815.png)
+
+But several issues: sex is a good match, but useless
+
+So,
+
+![Then link](images/clipboard-529695242.png)
+
+![](images/clipboard-1183508693.png)
+
+![](images/clipboard-1824191539.png)
+
+![](images/clipboard-1472979257.png)
+
+## How to 
+
+1.  clean the datasets
+2.  generate pair or records
+3.  compare separate columns of each pair
+4.  score pairs using summing or probability
+5.  select pairs that are matches based on their score
+6.  link the datasets together
+
+```{r}
+# Create example datasets (if needed)
+dat1 <- tibble(
+  id = 1:5,
+  first_name = c("John", "Jane", "Alice", "Robert", "Charlie"),
+  last_name = c("Doe", "Doe", "Brown", "Smith", "Adams"),
+  birth_year = c(1980, 1992, 1985, 1978, 1990)
+)
+
+dat2 <- tibble(
+  id = 6:10,
+  first_name = c("Jon", "Janet", "Alicia", "Rob", "Charles"),
+  last_name = c("Doe", "Doe", "Browne", "Smyth", "Adams"),
+  birth_year = c(1980, 1992, 1985, 1978, 1990)
+)
+
+```
+
+```{r}
+head(dat1)
+```
+
+```{r}
+head(dat2)
+```
+
+```{r}
+# Clean datasets (convert to lowercase, remove whitespace, etc.)
+clean_data <- function(df) {
+  df |> mutate(
+    first_name = tolower(trimws(first_name)),
+    last_name = tolower(trimws(last_name))
+  )
+}
+
+dat1 <- clean_data(dat1)
+dat2 <- clean_data(dat2)
+```
+
+```{r}
+
+
+
+
+# Generate pairs of records
+pairs <- pair_blocking(dat1, dat2, on = "birth_year")
+
+# Compare separate columns of each pair using Jaro-Winkler similarity
+compare_pairs(pairs, on = c("last_name", "first_name"), 
+              default_comparator = cmp_jarowinkler(0.9), inplace = TRUE)
+
+# Estimate probabilistic linkage parameters using the EM algorithm
+m <- problink_em(~ last_name + first_name, data = pairs)
+print(m)  # Display estimated m- and u-probabilities
+
+# Predict match probabilities and add to pairs
+pairs <- predict(m, pairs = pairs, add = TRUE)
+
+# Score pairs using a simple weighted sum method
+pairs <- score_simple(pairs, "score", 
+                      on = c("last_name", "first_name"), 
+                      w1 = c(last_name = 2, first_name = 1), 
+                      w0 = -1, wna = 0)
+
+# Select pairs based on a threshold
+pairs <- select_threshold(pairs, "threshold", score = "score", threshold = 1.5)
+
+# Enforce one-to-one matching using a greedy selection approach
+pairs <- select_greedy(pairs, "score", variable = "greedy", threshold = 1.5)
+
+# Link datasets together based on selected pairs
+linked_data <- link(pairs, selection = "greedy")
+
+# Display linked dataset
+print(linked_data)
+
 ```
