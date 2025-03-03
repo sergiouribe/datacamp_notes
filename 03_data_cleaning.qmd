@@ -343,3 +343,11 @@ linked_data <- link(pairs, selection = "greedy")
 print(linked_data)
 
 ```
+
+# SUMMARY
+
+![](images/clipboard-1032426442.png)
+
+![](images/clipboard-2876810608.png)
+
+![![](images/clipboard-1457813890.png)![](images/clipboard-1950458036.png)](images/clipboard-27555222.png)
