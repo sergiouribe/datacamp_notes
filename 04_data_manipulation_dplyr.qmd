@@ -1,0 +1,75 @@
+---
+title: "04 Data Manipulation with dplyr"
+format: html
+editor: visual
+---
+
+```{r}
+pacman::p_load(tidyverse)
+```
+
+-   Exploring, transforming and aggregating data
+
+# Verbs
+
+## Select()
+
+```{r}
+counties <- read_csv("https://www.openintro.org/data/csv/county.csv")
+```
+
+```{r}
+glimpse(counties)
+```
+
+```{r}
+counties |> 
+  select(name, pop2000, poverty, unemployment_rate)
+```
+
+## Filter() and Arrange()
+
+```{r}
+counties |> 
+  select(name, pop2000, poverty, unemployment_rate) |> 
+  arrange(desc(pop2000))
+```
+
+```{r}
+counties |> 
+  select(name, pop2000, poverty, unemployment_rate) |> 
+  arrange(pop2000)
+```
+
+```{r}
+counties |> 
+  select(name, pop2000, poverty, unemployment_rate) |> 
+  arrange(desc(pop2000)) |> 
+  filter(unemployment_rate < 6)
+```
+
+## Mutate()
+
+```{r}
+counties |> 
+ mutate(name, pop2000, per_cap_euros = per_capita_income * .95 , 
+        .keep = "none" ) |>  # check this out!
+  arrange(desc(per_cap_euros))
+```
+
+## Count
+
+```{r}
+counties |> 
+  count(name,
+        wt = pop2000, # weight 
+        sort = T) 
+```
+
+```{r}
+counties_selected %>%
+  # Add population_walk containing the total number of people who walk to work 
+  mutate(population_walk = walk * population)  %>%
+  # Count weighted by the new column, sort in descending order
+ count(state, wt = population_walk, sort = T)
+```
