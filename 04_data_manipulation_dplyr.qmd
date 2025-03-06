@@ -73,3 +73,65 @@ counties_selected %>%
   # Count weighted by the new column, sort in descending order
  count(state, wt = population_walk, sort = T)
 ```
+
+## slice_max() and slice_min()
+
+```{r}
+counties |> 
+ mutate(name, pop2000, per_cap_euros = per_capita_income * .95 , 
+        .keep = "none" ) |>  # check this out!
+  arrange(desc(per_cap_euros)) |> 
+  slice_max(per_cap_euros, n = 3) # the first three
+```
+
+```{r}
+counties |> 
+ mutate(name, pop2000, per_cap_euros = per_capita_income * .95 , 
+        .keep = "none" ) |>  # check this out!
+  arrange(desc(per_cap_euros)) |> 
+  slice_min(per_cap_euros, n = 3) # the last three
+```
+
+```{r}
+counties |> 
+  select(state, name, poverty) |> 
+  group_by(state) |> 
+  slice_max(poverty, n = 3) # the three per group!!
+```
+
+## Selecting
+
+select(una)
+
+select(una, esta:a_esta)
+
+### contains
+
+```{r}
+counties |> 
+  select(name, metro, contains("income"))
+```
+
+```{r}
+counties |> 
+  select(name, metro, starts_with("pop"))
+```
+
+-   contains()
+
+-   starts_with()
+
+-   ends_with()
+
+-   last_col()
+
+-   matches()
+
+-   ?select_helpers
+
+    ```{r}
+    counties |> 
+      select(-pop2000)
+    ```
+
+## rename
