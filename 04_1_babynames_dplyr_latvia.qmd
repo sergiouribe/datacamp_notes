@@ -1,0 +1,118 @@
+---
+title: "04_1_baby_datasets_dplyr_practice"
+format: html
+editor: visual
+---
+
+```{r}
+pacman::p_load(tidyverse, 
+               janitor, 
+               here)
+```
+
+```{r}
+babynames_boys <- read.delim(here("datasets", "babynames_boys_1920_2020_all_data.csv"))
+```
+
+```{r}
+babynames_girls <- read.delim(here("datasets", "babynames_girls_1920_2020_all_data.csv"))
+```
+
+```{r}
+# create one dataset
+bind_rows(babynames_boys,babynames_girls ) |> 
+  tabyl(gender)
+```
+
+```{r}
+bind_rows(babynames_boys,babynames_girls ) |> 
+  tabyl(gender)
+
+```
+
+```{r}
+babynames <- bind_rows(babynames_boys,babynames_girls)
+```
+
+```{r}
+glimpse(babynames)
+```
+
+## Convert to wide to long, and remove the X at the start of years
+
+```{r}
+babynames <- babynames |> 
+  select(-region) |> 
+  pivot_longer(cols = X1920:X2020, 
+               names_to = "year", 
+               values_to = "n") |> 
+  mutate(year = str_remove_all(year, "X"), 
+         year = as_factor(year))
+```
+
+```{r}
+rm(babynames_boys, babynames_girls)
+```
+
+```{r}
+babynames
+```
+
+### Frequency of a name
+
+```{r}
+babynames |> 
+  filter(name == "LAIMA")
+```
+
+```{r}
+babynames |> 
+  filter(name == "LAIMA") |> 
+  ggplot(aes(x = year, 
+             y = n, 
+             group = name)) +  #check this
+  geom_line()
+```
+
+```{r}
+babynames |> 
+  filter(name %in% c("LAIMA", "LAURA")) |> 
+  ggplot(aes(x = year, 
+             y = n, 
+             group = name, 
+             color = name)) +  #check this
+  geom_line()
+```
+
+## When was most common each name?
+
+```{r}
+babynames |> 
+  group_by(name) |> 
+  slice_max(n, n = 1) |> 
+  arrange(desc(year))
+```
+
+## What is the most common name by year?
+
+```{r}
+babynames |> 
+  group_by(year) |> 
+  slice_max(n, n = 1) |> 
+  arrange(desc(year))
+```
+
+ANOTHER BABYNAMES DATASET
+
+```{r}
+babynames <- read_csv("https://raw.githubusercontent.com/hadley/data-baby-names/refs/heads/master/baby-names-by-state.csv")
+```
+
+## Summarize total by year
+
+```{r}
+babynames |> 
+  group_by(as.factor(year)) |> 
+  mutate(year_total = sum(number, na.rm = T)) |> 
+  select(-("as.factor(year)"))
+```

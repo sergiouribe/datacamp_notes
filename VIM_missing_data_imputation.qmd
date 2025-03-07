@@ -1,0 +1,58 @@
+---
+title: "VIM_Missing_values"
+format: html
+editor: visual
+---
+
+## 
+
+```{r}
+pacman::p_load(tidyverse, 
+               visdat, 
+               VIM )
+```
+
+```{r}
+data("sleep")
+```
+
+```{r}
+visdat::vis_dat(sleep)
+```
+
+```{r}
+aggr(sleep, plot = FALSE) |> 
+  plot(numbers = TRUE, prop = FALSE)
+```
+
+The left plot shows the amount of missings for each column in the dataset `sleep` and the right plot shows how often each combination of missings occur. For example, there are 9 rows wich contain a missing in both `NonD` and `Dream`.
+
+```{r}
+ sleep[, c("Dream", "Sleep")] |> 
+   marginplot()
+```
+
+The **red** boxplot on the left shows the distrubution of all values of `Sleep` where `Dream` contains a missing value. The **blue** boxplot on the left shows the distribution of the values of `Sleep` where `Dream` is observed.
+
+## Impute missing values
+
+In order to impute missing values, `VIM` offers a spectrum of imputation methods like `kNN()` (k nearest neighbour), `hotdeck()` and so forth. Those functions can be applied to a `data.frame` and return another `data.frame` where missings are replaced by imputed values.
+
+```{r}
+x <- sleep[, c("Dream", "Sleep")]
+x_imputed <- kNN(x)
+```
+
+```{r}
+marginplot(x_imputed, delimiter = "_imp")
+```
+
+In this plot three differnt colors are used in the top-right. These colors represent the structure of missings.
+
+-   **brown** points represent values where `Dream` was missing initially
+
+-   **beige** points represent values where `Sleep` was missing initially
+
+-   **black** points represent values where both `Dream` and `Sleep` were missing initially
+
+The `kNN()` method seemingly preserves the correlation between `Dream` and `Sleep`.
