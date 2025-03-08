@@ -114,5 +114,26 @@ babynames <- read_csv("https://raw.githubusercontent.com/hadley/data-baby-names/
 babynames |> 
   group_by(as.factor(year)) |> 
   mutate(year_total = sum(number, na.rm = T)) |> 
-  select(-("as.factor(year)"))
+  select(state:sex, year_total )
+```
+
+So far: \
+**Grouped Mutates**: You discovered how to use `group_by` and `mutate` together to calculate totals within each group. For instance, grouping by year to find the total number of babies born each year.
+
+-   **Window Functions**: The lesson introduced `slice_max()`, a function that helps identify the maximum value within each group, such as finding the year each name was most popular.
+
+-   **Normalization**: You learned to normalize data by dividing each name's frequency by the maximum frequency of that name, making every name's peak value 1. This technique allows for comparing the relative change in popularity of names.
+
+-   **Visualization**: Using `ggplot2`, you visualized the normalized popularity of names over time. The exercise guided you through creating a line plot to show the change in popularity of the names Steven, Thomas, and Matthew, demonstrating how to filter and plot data effectively.
+
+```         
+names_normalized <- babynames %>%
+                     group_by(name) %>%
+                     mutate(name_total = sum(number),
+                            name_max = max(number)) %>%
+                     ungroup() %>%
+                     mutate(fraction_max = number / name_max)
+
+ggplot(names_filtered, aes(x = year, y = fraction_max, color = name)) +
+  geom_line()
 ```
