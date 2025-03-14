@@ -81,4 +81,38 @@ batman_parts %>%
 
 ![](images/clipboard-3758483078.png)
 
-## Partial joins
+## RECAP
+
+-   **Full Join**: You discovered how to use a full join to combine all observations from two tables, regardless of whether they match. This is useful when you want to see all data from both tables side by side, filling in missing values with NAs where there is no match.
+
+-   **Semi and Anti Joins**: While not detailed in the exercises, understanding that semi-joins return all rows from the first table where there are matching values in the second table, and anti-joins return all rows from the first table where there are not matching values in the second table, is crucial for data analysis.
+
+-   **Practical Application**: You applied these concepts to compare LEGO sets and themes, specifically Batman and Star Wars. This involved joining different tables to gather comprehensive data on the LEGO pieces, including their colors and quantities.
+
+-   **Data Aggregation**: You learned to aggregate data to count part numbers and color IDs, weighted by quantity, for both Batman and Star Wars themes. This step is essential for summarizing data before making comparisons.
+
+-   **Combining Data for Comparison**:
+
+    ```         
+    batman_parts %>%
+      full_join(star_wars_parts, by = c("part_num", "color_id"), suffix = c("_batman", "_star_wars")) %>%
+      replace_na(list(n_batman = 0, n_star_wars = 0))
+    ```
+
+    This code snippet demonstrates how to combine aggregated data from two themes using a full join, and then replace NA values with zeros for easier comparison.
+
+-   **Enhancing Data Interpretability**: Finally, you enhanced the interpretability of your data by joining additional tables that provide descriptive names for part numbers and color IDs, allowing for a more meaningful comparison between the Batman and Star Wars LEGO themes.
+
+MUTATING JOINS: add columns
+
+FILTERING JOINS: dont add columns
+
+## Filtering joins
+
+![](images/clipboard-1905726842.png)
+
+![![](images/clipboard-3481947105.png)](images/clipboard-2554156545.png)
+
+## Visualizing  set differences
+
+![![](images/clipboard-2457449103.png)](images/clipboard-1241158724.png)
