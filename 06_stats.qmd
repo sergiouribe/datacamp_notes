@@ -1,0 +1,31 @@
+---
+title: "06_stats"
+format: html
+editor: visual
+---
+
+```{r}
+pacman::p_load(tidyverse, here, janitor)
+```
+
+# Stats
+
+**Descriptive**: describe and summarize data
+
+**Inferential**: use a sample data to make inferences about a larger population
+
+## Types of data
+
+**Numeric** (quantative): continuos or discrete
+
+**Categorical** (qualitative): nominal or ordinal
+
+## Measures of center
+
+mean, median, mode
+
+## Measures of spread
+
+variance, sd (penalize longer distances), mean absolute deviation (MAD) (dont penalize longer distance)
+
+quartiles, quantile, IQR
