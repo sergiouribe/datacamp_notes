@@ -22,10 +22,14 @@ pacman::p_load(tidyverse, here, janitor)
 
 ## Measures of center
 
-mean, median, mode
+-   mean,
+
+-   median,
+
+-   mode
 
 ## Measures of spread
 
-variance, sd (penalize longer distances), mean absolute deviation (MAD) (dont penalize longer distance)
+-   variance, sd (penalize longer distances), mean absolute deviation (MAD) (dont penalize longer distance)
 
-quartiles, quantile, IQR
+-   quartiles, quantile, IQR
