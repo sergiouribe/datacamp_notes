@@ -1,0 +1,106 @@
+---
+title: "caries europe map 12yo"
+format: html
+editor: visual
+---
+
+```{r}
+pacman::p_load(eurostat, 
+               countrycode, 
+               leaflet, 
+               sf, 
+               here, 
+               giscoR, 
+               scales, 
+               cowplot, 
+               ggthemes, 
+               tidyverse)
+```
+
+```{r}
+df <- data.frame(
+  Country = c("France", "Croatia", "Albania", "Macedonia", "Latvia", "Romania", 
+              "Montenegro", "Bulgaria", "Poland", "Estonia", "Moldova", "Russian Federation",
+              "Czech Republic", "Belarus", "Lithuania", "Georgia", "Slovenia", "Greece", "Cyprus",
+              "Portugal", "Italy", "Switzerland", "Belgium", "Spain", "United Kingdom",
+              "Sweden", "Finland", "Netherlands", "Germany", "Denmark"),
+  Year = c(2006, 2015, 2011, 2013, 2021, 2011, 2006, 2010, 2014, 2003, 2012, 2008, 
+           2010, 2009, 2008, 2012, 2013, 2011, 2010, 2014, 2012, 2011, 2010, 2019,
+           2013, 2011, 2009, 2006, 2016, 2014),
+  DMFT = c(1.2, 4.2, 3.7, 3.5, 3.4, 3.4, 3.4, 3.0, 2.8, 2.8, 2.7, 2.5, 2.1, 2.1, 2.1, 
+           2.0, 1.9, 1.5, 1.3, 1.2, 1.2, 0.9, 0.9, 0.8, 0.8, 0.8, 0.7, 0.6, 0.4, 0.4)
+)
+```
+
+```{r}
+SHP_0 <- get_eurostat_geospatial(resolution = 10, 
+                                 nuts_level = 0, 
+                                 year = 2016)
+```
+
+```{r}
+SHP_0 %>% 
+  ggplot() +
+  geom_sf() +
+  scale_x_continuous(limits = c(-10, 35)) +
+  scale_y_continuous(limits = c(35, 65)) +
+  theme_void()
+```
+
+```{r}
+df$CountryCode <- countrycode(sourcevar = df$Country, origin = "country.name", destination = "iso2c")
+
+```
+
+```{r}
+caries_data <- df %>% 
+  select(CountryCode, DMFT) %>% 
+  inner_join(SHP_0, by = c("CountryCode" = "geo")) %>% 
+  st_as_sf()
+```
+
+```{r}
+caries_data %>% 
+  ggplot(aes(fill = DMFT)) +
+ geom_sf(size = 0.2, color = "#F3F3F3") + # border line
+  scale_fill_continuous(
+    type = "viridis",
+     direction = -1, 
+    name = "DMFT",                    # title of the legend
+    breaks = seq(from = 0, to = 5, by = 1),
+    guide = guide_colorbar(
+      direction = "vertical",             # vertical colorbar
+      title.position = "top",             # title displayed at the top
+      label.position = "right",           # labels displayed at the right side
+      barwidth = unit(0.4, "cm"),         # width of the colorbar
+      barheight = unit(3, "cm"),          # height of the colorbar
+      ticks = TRUE,                       # ticks are displayed
+    )
+  ) + 
+  scale_x_continuous(limits = c(-10, 35)) +
+  scale_y_continuous(limits = c(35, 65)) +
+  theme_void() +
+  theme(
+    legend.position = c(0.97, 0.50),   # relative horizontal, vertical position
+    plot.caption = element_text(color = "darkgrey", size = 9) # change color and size of caption text
+  ) + 
+  
+  labs(title = "Kariesa smaguma pakāpe 12-gadīgiem bērniem Eiropā", 
+       subtitle = "Maldupa et al. (2021). Int. Dent. J. 71, 214–223.")
+```
+
+```{r}
+ggsave(here("images", "caries.png"), 
+       dpi = 300,             # High resolution (adjust as needed)
+  width = 15,             # Width in inches (adjust as needed)
+  height = 15,            # Height in inches (adjust as needed)
+  units = "cm")           # Ensure the dimensions are in inches)
+```
+
+```{r}
+ggsave(here("images", "caries.pdf"), 
+       dpi = 300,             # High resolution (adjust as needed)
+  width = 15,             # Width in inches (adjust as needed)
+  height = 15,            # Height in inches (adjust as needed)
+  units = "cm")           # Ensure the dimensions are in inches)
+```

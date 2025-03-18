@@ -6,6 +6,7 @@ editor: visual
 
 ```{r}
 pacman::p_load(tidyverse, here, janitor)
+
 ```
 
 # Stats
@@ -27,6 +28,11 @@ pacman::p_load(tidyverse, here, janitor)
 -   median,
 
 -   mode
+
+```{r}
+mean(sleep_data$sleep_hours)
+median(sleep_data$sleep_hours)
+```
 
 ## Measures of spread
 
