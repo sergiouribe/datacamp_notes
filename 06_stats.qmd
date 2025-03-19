@@ -6,7 +6,6 @@ editor: visual
 
 ```{r}
 pacman::p_load(tidyverse, here, janitor)
-
 ```
 
 # Stats
@@ -39,3 +38,52 @@ median(sleep_data$sleep_hours)
 -   variance, sd (penalize longer distances), mean absolute deviation (MAD) (dont penalize longer distance)
 
 -   quartiles, quantile, IQR
+
+#### **EXCERCISES**
+
+1.  Load the dataset and explore its structure.
+
+    ```{r}
+    data("mtcars")
+    ```
+
+    ```{r}
+    glimpse(mtcars)
+    ```
+
+2.  Compute summary statistics for the `mpg` (miles per gallon) variable.
+
+    ```{r}
+    summary(mtcars$mpg)
+    ```
+
+3.  Compute the mean, median, and mode of `mpg`.
+
+    ```{r}
+    mean(mtcars$mpg)
+
+    ```
+
+    ```{r}
+    median(mtcars$mpg)
+    ```
+
+4.  Compute the variance, standard deviation, and interquartile range (IQR) for `mpg`.
+
+```{r}
+var(mtcars$mpg)
+```
+
+```{r}
+sd(mtcars$mpg)
+```
+
+```{r}
+IQR(mtcars$mpg)
+```
+
+```{r}
+mtcars |> 
+  ggplot(aes(x = mpg)) + 
+  geom_histogram(bins = 10)
+```
