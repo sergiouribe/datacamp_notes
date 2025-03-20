@@ -87,3 +87,43 @@ mtcars |>
   ggplot(aes(x = mpg)) + 
   geom_histogram(bins = 10)
 ```
+
+```{r}
+# Binomial Distribution Problem: Project Winning Probability
+
+# Probability of winning a project: 0.3
+p <- 0.3
+# Number of projects per week: 3
+n_week <- 3
+
+# Probability of winning 0, 1, 2, or 3 projects in a week
+week_probs <- dbinom(0:3, size = n_week, prob = p)
+week_probs
+
+# Expected number of projects won in a week
+expected_week <- n_week * p
+expected_week
+
+# Variance and standard deviation for a week
+var_week <- n_week * p * (1 - p)
+sd_week <- sqrt(var_week)
+var_week
+sd_week
+
+# Extending to daily and yearly calculations
+n_day <- n_week / 7  # Average projects per day
+n_year <- n_week * 52  # Total projects per year
+
+# Expected number of projects won per day and per year
+expected_day <- n_day * p
+expected_year <- n_year * p
+
+expected_day
+expected_year
+
+# Variance and standard deviation for a year
+var_year <- n_year * p * (1 - p)
+sd_year <- sqrt(var_year)
+
+var_year
+sd_year
