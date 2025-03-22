@@ -87,3 +87,156 @@ mtcars |>
   ggplot(aes(x = mpg)) + 
   geom_histogram(bins = 10)
 ```
+
+-   Continuous variables differ from discrete variables in that they can represent an infinite number of possibilities within a given range.
+
+-   The continuous uniform distribution was introduced as a way to model scenarios where each outcome in a range has an equal probability of occurring. For example, the probability of waiting any given time between 0 and 12 minutes for a bus is represented by a flat line on a graph, indicating uniform probability across the board.
+
+-   You learned how to calculate probabilities for specific ranges within a continuous uniform distribution. By calculating the area of the rectangle formed between two points on the distribution line, you can determine the probability of an event occurring within that range. For instance, the probability of waiting between 4 and 7 minutes for the bus is 25%.
+
+-   Practical application in R was covered, showing how to use the `punif` function to calculate probabilities for continuous uniform distributions. For example, to find the probability of waiting less than 7 minutes, you would use:
+
+```         
+punif(7, min = 0, max = 12)
+```
+
+-   The lesson also touched on the distinction between discrete and continuous distributions, highlighting the importance of understanding the type of variable you're dealing with to choose the appropriate modeling approach.
+
+-   Finally, you applied these concepts to model real-world scenarios, such as predicting wait times for data backups, and used simulation to visualize potential outcomes.
+
+## Examples about caries distribution
+
+Paper
+
+<https://pubmed.ncbi.nlm.nih.gov/34024331/>
+
+```{r}
+# Caries Prevalence and Severity for 12-Year-Old Children in Latvia
+# Based on Maldupa et al., 2021: Mean D5MFT = 2.4, SD = 2.4
+# We'll assume a uniform distribution between 0 and 7 for these exercises
+
+# Exercise 1: What is the probability that a child has 3 or fewer D5MFT?
+punif(3, min = 0, max = 7)
+# Interpretation: Cumulative probability up to 2 D5MFT
+
+```
+
+```{r}
+
+# Exercise 2: What is the probability that a child has between 2 and 4 D5MFT?
+punif(4, min = 0, max = 7) - punif(2, min = 0, max = 7)
+# Interpretation: Probability of having 2 < D5MFT <= 4
+
+
+```
+
+```{r}
+# Exercise 3: What is the probability that a child has more than 6 D5MFT?
+1 - punif(6, min = 0, max = 7)
+# Interpretation: Probability of D5MFT > 5 (severe caries)
+
+
+```
+
+```{r}
+# Exercise 4: What proportion of children meet the WHO target of D5MFT ≤ 3?
+punif(3, min = 0, max = 7)
+# Interpretation: Proportion of children with D5MFT ≤ 3
+
+```
+
+```{r}
+
+# Exercise 5: Comparing Latvia vs. Europe
+# Latvian D5MFT ~ U(0, 7); European average D5MFT ~ U(0, 4)
+
+# What is the probability that a European child has less than 2 D5MFT?
+punif(2, min = 0, max = 4)
+
+
+```
+
+```{r}
+# What is the same probability for a Latvian child?
+punif(2, min = 0, max = 7)
+```
+
+## Binomial probability
+
+📄 **Reference**:
+Maldupa et al., *Int Dent J*, 2021 – Caries prevalence in Latvian 12-year-olds
+🔢 **Key Info**:
+
+-   **Prevalence of D5MFT \> 0** = 71.9% → probability p=0.719p = 0.719p=0.719
+
+    Sample size = 2,138 students
+    We will simulate smaller samples (e.g., 10 or 20 students)
+
+### Exercise 1: Exact Probability with `dbinom()`
+
+> What is the probability that **exactly 5 out of 10** randomly selected 12-year-old children in Latvia have dentinal caries (D5MFT \> 0)?
+
+```{r}
+# Probability of having D5MFT > 0
+p <- 0.719
+
+# Sample size
+n <- 10
+
+# Probability of exactly 5 children having caries
+dbinom(5, size = n, prob = p)
+```
+
+### Exercise 2: Cumulative Probability with `pbinom()`
+
+What is the probability that **at most 3 children** out of 10 have D5MFT \> 0?
+
+```{r}
+# Cumulative probability of 0 to 3 children having caries
+pbinom(3, size = n, prob = p)
+```
+
+### Exercise 3: Probability of "At Least" with `1 - pbinom()`
+
+What is the probability that **at least 7 children** out of 10 have dentinal caries?
+
+```{r}
+# Probability of 7 or more children having caries
+1 - pbinom(6, size = n, prob = p)
+```
+
+### Calculate the full distribution
+
+```{r}
+# Full binomial distribution: 0 to 10 with prob = 0.719
+deals <- 0:10
+probs <- dbinom(deals, size = 10, prob = 0.719)
+data.frame(CariesCases = deals, Probability = round(probs, 4))
+```
+
+```{r}
+# Parameters based on the caries study
+n <- 10              # number of children
+p <- 0.719           # probability of having D5MFT > 0
+
+# Create data for 0 to 10 children with caries
+caries_cases <- 0:n
+probabilities <- dbinom(caries_cases, size = n, prob = p)
+
+# Create dataframe
+df <- data.frame(
+  CariesCases = caries_cases,
+  Probability = probabilities
+)
+
+# Plot using ggplot2
+ggplot(df, aes(x = CariesCases, y = Probability)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = round(Probability, 3)), vjust = -0.5, size = 3.5) +
+  labs(
+    title = "Binomial Distribution of Caries Cases (n = 10, p = 0.719)",
+    x = "Number of Children with D5MFT > 0",
+    y = "Probability"
+  ) +
+  theme_minimal()
+```
