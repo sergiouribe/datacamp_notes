@@ -127,3 +127,56 @@ sd_year <- sqrt(var_year)
 
 var_year
 sd_year
+
+# CENTRAL THEORY LIMIT
+
+# Simulate a population: number of decayed teeth per patient (skewed distribution)
+set.seed(123)
+population_size <- 10000
+decayed_teeth <- rexp(population_size, rate = 1/2)  # Exponential distribution, mean = 2
+
+# Create a data frame
+population_df <- data.frame(decayed_teeth = decayed_teeth)
+
+# EXERCISE 1: Take one random sample of 30 patients
+sample_1 <- sample(decayed_teeth, size = 30, replace = TRUE)
+mean_sample_1 <- mean(sample_1)
+cat("Mean of one sample (n=30):", mean_sample_1, "\n")
+
+# Plot population distribution
+ggplot(population_df, aes(x = decayed_teeth)) +
+  geom_histogram(binwidth = 0.3, fill = "lightblue", color = "black") +
+  labs(title = "Population: Decayed Teeth per Patient",
+       x = "Number of Decayed Teeth", y = "Count")
+
+# EXERCISE 2: Repeat sampling 1000 times with sample size 30
+sample_means_30 <- replicate(1000, mean(sample(decayed_teeth, size = 30, replace = TRUE)))
+sample_means_df_30 <- data.frame(sample_mean = sample_means_30)
+
+# Plot sampling distribution for n = 30
+ggplot(sample_means_df_30, aes(x = sample_mean)) +
+  geom_histogram(binwidth = 0.1, fill = "lightgreen", color = "black") +
+  labs(title = "Sampling Distribution of the Mean (n = 30)",
+       x = "Sample Mean", y = "Frequency")
+
+# Compare population and sample mean
+cat("Population mean:", mean(decayed_teeth), "\n")
+cat("Mean of sample means (n=30):", mean(sample_means_30), "\n")
+
+# EXERCISE 3: Larger sample sizes
+sample_means_100 <- replicate(1000, mean(sample(decayed_teeth, size = 100, replace = TRUE)))
+sample_means_500 <- replicate(1000, mean(sample(decayed_teeth, size = 500, replace = TRUE)))
+
+# Combine into one data frame for faceted plotting
+sample_means_df <- bind_rows(
+  data.frame(sample_mean = sample_means_30, sample_size = "n = 30"),
+  data.frame(sample_mean = sample_means_100, sample_size = "n = 100"),
+  data.frame(sample_mean = sample_means_500, sample_size = "n = 500")
+)
+
+# Faceted plot for different sample sizes
+ggplot(sample_means_df, aes(x = sample_mean)) +
+  geom_histogram(binwidth = 0.1, fill = "lightcoral", color = "black") +
+  facet_wrap(~sample_size, scales = "free_y") +
+  labs(title = "Sampling Distribution for Different Sample Sizes",
+       x = "Sample Mean", y = "Frequency")
