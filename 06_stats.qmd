@@ -163,14 +163,11 @@ punif(2, min = 0, max = 7)
 
 ## Binomial probability
 
-📄 **Reference**:
-Maldupa et al., *Int Dent J*, 2021 – Caries prevalence in Latvian 12-year-olds
-🔢 **Key Info**:
+📄 **Reference**: Maldupa et al., *Int Dent J*, 2021 – Caries prevalence in Latvian 12-year-olds 🔢 **Key Info**:
 
 -   **Prevalence of D5MFT \> 0** = 71.9% → probability p=0.719p = 0.719p=0.719
 
-    Sample size = 2,138 students
-    We will simulate smaller samples (e.g., 10 or 20 students)
+    Sample size = 2,138 students We will simulate smaller samples (e.g., 10 or 20 students)
 
 ### Exercise 1: Exact Probability with `dbinom()`
 
@@ -215,6 +212,10 @@ data.frame(CariesCases = deals, Probability = round(probs, 4))
 ```
 
 ```{r}
+rm(p, n)
+```
+
+```{r}
 # Parameters based on the caries study
 n <- 10              # number of children
 p <- 0.719           # probability of having D5MFT > 0
@@ -239,4 +240,60 @@ ggplot(df, aes(x = CariesCases, y = Probability)) +
     y = "Probability"
   ) +
   theme_minimal()
+```
+
+```{r}
+rm(n, p)
+```
+
+## RECAP
+
+```{r}
+# # Set seed to 321
+# set.seed(321)
+# 
+# # Take 30 samples of 20 values of num_users, take mean of each sample
+# sample_means <- replicate(30, sample(all_deals$num_users, 20) %>% mean())
+# 
+# # Calculate mean of sample_means
+# mean(sample_means)
+# 
+# # Calculate mean of num_users in amir_deals
+# mean(amir_deals$num_users)
+```
+
+# Poisson 
+
+Number of patients at the emergency clinic
+
+lambda: average n of events per time interval
+
+If lambda = 8, then whats the p of 5?
+
+```{r}
+dpois(5, lambda = 8)
+```
+
+five or fewer?
+
+```{r}
+ppois(5, lambda = 8)
+```
+
+greater than 5?
+
+```{r}
+ppois(5, lambda = 8, lower.tail = FALSE)
+```
+
+if lambda raises to 10?
+
+```{r}
+ppois(5, lambda = 10, lower.tail = FALSE)
+```
+
+SAMPLING
+
+```{r}
+rpois(10, lambda = 8)
 ```
