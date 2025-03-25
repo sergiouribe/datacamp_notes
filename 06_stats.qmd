@@ -29,8 +29,8 @@ pacman::p_load(tidyverse, here, janitor)
 -   mode
 
 ```{r}
-mean(sleep_data$sleep_hours)
-median(sleep_data$sleep_hours)
+# mean(sleep_data$sleep_hours)
+# median(sleep_data$sleep_hours)
 ```
 
 ## Measures of spread
@@ -262,7 +262,7 @@ rm(n, p)
 # mean(amir_deals$num_users)
 ```
 
-# Poisson
+## Poisson
 
 Number of patients at the emergency clinic
 
@@ -298,4 +298,4 @@ SAMPLING
 rpois(10, lambda = 8)
 ```
 
-## DELETE THIS TEXT
+
