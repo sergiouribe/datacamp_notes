@@ -262,7 +262,7 @@ rm(n, p)
 # mean(amir_deals$num_users)
 ```
 
-# Poisson 
+# Poisson
 
 Number of patients at the emergency clinic
 
@@ -297,3 +297,5 @@ SAMPLING
 ```{r}
 rpois(10, lambda = 8)
 ```
+
+## DELETE THIS TEXT
