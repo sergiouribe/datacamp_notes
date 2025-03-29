@@ -1,4 +1,4 @@
----
+ko---
 title: "06_stats"
 format: html
 editor: visual
@@ -298,4 +298,6 @@ SAMPLING
 rpois(10, lambda = 8)
 ```
 
+
+#2025-03-29
 
