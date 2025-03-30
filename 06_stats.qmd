@@ -298,4 +298,53 @@ SAMPLING
 rpois(10, lambda = 8)
 ```
 
+-   **Poisson Process**: Defined as events occurring at a random but constant rate. Examples include daily sales leads or weekly adoptions at an animal shelter.
 
+-   **Lambda ((\\lambda))**: The average rate at which events occur, serving as the expected value and key parameter of the Poisson distribution. It directly influences the shape of the distribution.
+
+-   **Calculating Probabilities**: You learned how to use the `dpois` function to calculate the probability of a specific number of events happening, and the `ppois` function to calculate the probability of up to a certain number of events occurring. For example, to find the probability of exactly 5 adoptions in a week with an average ((\\lambda)) of 8, you would use `dpois(5, 8)`, resulting in about 9%.
+
+-   **Sampling from the Distribution**: Using the `rpois` function allows for simulating random samples from a Poisson distribution, which can help in understanding the variability of outcomes.
+
+## Exponential distribution
+
+prob of time between Poisson events
+
+but is continuos since it represent time
+
+![](images/clipboard-3103546156.png)
+
+```{r}
+# What's the probability it takes Amir less than an hour to respond to a lead?
+# Probability response takes < 1 hour
+pexp(1,  rate = 1/2.5)
+```
+
+```{r}
+# What's the probability it takes Amir more than 4 hours to respond to a lead?
+# Probability response takes > 4 hours
+pexp(4, rate = 1/2.5, lower.tail = FALSE)
+```
+
+```{r}
+# Probability response takes 3-4 hours
+pexp(4, rate = 1/2.5) - pexp(3, rate = 1/2.5)
+```
+
+## t-distribution
+
+![](images/clipboard-684784879.png)
+
+## log-normal distribution
+
+![](images/clipboard-2228762202.png)
+
+![](images/clipboard-2459392492.png)
+
+# Correlation and experimental design
+
+```{r}
+# cor(x, y)
+```
+
+![](images/clipboard-3607907266.png)
