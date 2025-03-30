@@ -1,4 +1,4 @@
----
+ko---
 title: "06_stats"
 format: html
 editor: visual
@@ -300,6 +300,7 @@ rpois(10, lambda = 8)
 
 -   **Poisson Process**: Defined as events occurring at a random but constant rate. Examples include daily sales leads or weekly adoptions at an animal shelter.
 
+
 -   **Lambda ((\\lambda))**: The average rate at which events occur, serving as the expected value and key parameter of the Poisson distribution. It directly influences the shape of the distribution.
 
 -   **Calculating Probabilities**: You learned how to use the `dpois` function to calculate the probability of a specific number of events happening, and the `ppois` function to calculate the probability of up to a certain number of events occurring. For example, to find the probability of exactly 5 adoptions in a week with an average ((\\lambda)) of 8, you would use `dpois(5, 8)`, resulting in about 9%.
@@ -348,3 +349,4 @@ pexp(4, rate = 1/2.5) - pexp(3, rate = 1/2.5)
 ```
 
 ![](images/clipboard-3607907266.png)
+
