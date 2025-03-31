@@ -1,0 +1,31 @@
+---
+title: "07_ggplot2"
+format: html
+editor: visual
+---
+
+```{r}
+pacman::p_load(tidyverse)
+```
+
+# Introduction
+
+# Visible aesthetics
+
+![](images/clipboard-1005000570.png)
+
+```{r}
+iris |> 
+  ggplot(aes(x = Sepal.Length, 
+             y = Sepal.Width)) + 
+  geom_point()
+```
+
+```{r}
+iris |> 
+  ggplot(aes(x = Sepal.Length, y = Sepal.Width, 
+             color = Species)) + 
+  geom_point()
+```
+
+\
