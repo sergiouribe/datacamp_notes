@@ -28,4 +28,18 @@ iris |>
   geom_point()
 ```
 
-\
+# Attributes
+
+```{r}
+# A hexadecimal color
+my_blue <- "#4ABEFF"
+
+# Change the color mapping to a fill mapping
+ggplot(mtcars, aes(x = wt, y = mpg, color = cyl, fill = cyl)) +
+  # Set point size and shape
+  geom_point(  size = 5, shape = 1)
+```
+
+```{r}
+head(mtcars)
+```
