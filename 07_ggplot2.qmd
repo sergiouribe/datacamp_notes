@@ -43,3 +43,29 @@ ggplot(mtcars, aes(x = wt, y = mpg, color = cyl, fill = cyl)) +
 ```{r}
 head(mtcars)
 ```
+
+## Modifying aesthetics
+
+![](images/clipboard-4022402661.png)
+
+![](images/clipboard-3706621270.png)
+
+## Aesthetics best practices
+
+![](images/clipboard-2236642657.png)
+
+![![](images/clipboard-13360229.png)](images/clipboard-575168216.png)
+
+![![](images/clipboard-3004243300.png)](images/clipboard-3884451692.png)
+
+![](images/clipboard-3376627871.png)
+
+![](images/clipboard-375868012.png)
+
+```{r}
+ToothGrowth |> 
+  ggplot(aes(x = as.factor(dose),
+             y = len, 
+             color = supp)) + 
+  geom_point()
+```
