@@ -56,6 +56,8 @@ head(mtcars)
 
 ![![](images/clipboard-13360229.png)](images/clipboard-575168216.png)
 
+The historical context provided by Jacques Bertin and William Cleveland, emphasizing that the primary goal of data visualization is the accurate and efficient representation of data, with aesthetics serving a secondary role.
+
 ![![](images/clipboard-3004243300.png)](images/clipboard-3884451692.png)
 
 ![](images/clipboard-3376627871.png)
@@ -69,3 +71,253 @@ ToothGrowth |>
              color = supp)) + 
   geom_point()
 ```
+
+## Geometries
+
+![](images/clipboard-1606504949.png)
+
+![](images/clipboard-3242872909.png)
+
+```{r}
+iris |> 
+  ggplot(aes(x = Sepal.Length, 
+             y = Sepal.Width, 
+             col = Species)) + 
+  geom_point()
+```
+
+```{r}
+iris |> 
+  ggplot(aes(x = Sepal.Length, 
+             y = Sepal.Width)) + 
+  geom_point(aes(col = Species))
+```
+
+```{r}
+iris |> 
+  ggplot(aes(x = Sepal.Length, 
+             y = Sepal.Width, 
+             col = Species)) +  # inside
+  geom_point() + 
+  geom_smooth()
+```
+
+#### 🔍 What happens?
+
+-   Both the **points and the smoothing lines are colored by `Species`**.
+
+-   `geom_smooth()` fits **separate regression lines** for each species.
+
+```{r}
+iris |> 
+  ggplot(aes(x = Sepal.Length, 
+             y = Sepal.Width)) + 
+  geom_point(aes(col = Species)) +  # outside
+  geom_smooth()
+```
+
+#### What happens?
+
+-   Only the **points** are colored by `Species`.
+
+-   `geom_smooth()` has **no color mapping**, so it fits **one overall smoothing line** across all data.
+
+### 📊 Visual Summary
+
+| Layer | Global `aes(col = Species)` | Local `aes(col = Species)` only in `geom_point()` |
+|------------------------|------------------------|------------------------|
+| `geom_point` | Colored by Species | Colored by Species |
+| `geom_smooth` | One line **per Species** | One **combined line** for all data |
+
+### Example
+
+```{r}
+head(iris)
+```
+
+```{r}
+iris.summary <- iris |> 
+  group_by(Species) |> 
+  summarise_all(mean) 
+```
+
+```{r}
+iris.summary
+```
+
+```{r}
+iris |> 
+  ggplot( 
+       aes(x = Sepal.Length, 
+           y = Sepal.Width, 
+           col = Species)) + 
+  # all
+  geom_point() + 
+  # difference data
+  geom_point(data = iris.summary, 
+             shape = 21, 
+             size = 3, 
+             fill = "grey 10", 
+             stroke = 1)
+```
+
+```{r}
+iris |> 
+  ggplot( 
+       aes(x = Sepal.Length, 
+           y = Sepal.Width, 
+           col = Species)) + 
+  # all
+  geom_jitter(alpha = 0.5, 
+              shape = 7) + 
+  # difference data
+  geom_point(data = iris.summary, 
+             shape = 21, 
+             size = 3, 
+             fill = "grey 10", 
+             stroke = 1)
+```
+
+```{r}
+# Plot price vs. carat, colored by clarity
+ggplot(diamonds, aes(carat, price, color = clarity)) + 
+
+# Add a point layer with tiny points
+geom_point( shape = 16, alpha = 0.5, size = 1)
+```
+
+```{r}
+# Plot price vs. carat, colored by clarity
+diamonds |> 
+  ggplot(aes(x = carat, 
+             y = price, 
+             color = clarity)) + 
+# Add a point layer with tiny points
+geom_point()
+```
+
+```{r}
+# Plot price vs. carat, colored by clarity
+diamonds |> 
+  ggplot(aes(x = carat, 
+             y = price, 
+             color = clarity)) + 
+# Add a point layer with tiny points
+geom_jitter(alpha = 0.5, shape = 2, size = 1)
+```
+
+```{r}
+mtcars |> 
+  ggplot(aes(x = mpg, y = cyl, color = as.factor(gear))) + 
+# Default points are shown for comparison
+geom_point(position = "jitter", dodge.width = 0.3)
+```
+
+```{r}
+mtcars |> 
+  ggplot(aes(cyl, mpg, color = as.factor(gear))) + 
+
+# Default points are shown for comparison
+  geom_point() + 
+
+# Now jitter and dodge the point positions
+  geom_point(position = position_jitterdodge(jitter.width = 2, dodge.width = 0.3))
+```
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  # Use a jitter position function with width 0.1
+  geom_point(alpha = 0.5)
+```
+
+```{r}
+ggplot(iris, aes(Sepal.Length, Sepal.Width, color = Species)) +
+  # Use a jitter position function with width 0.1
+  geom_point(alpha = 0.5, 
+             position = position_jitter(width = 0.1))
+```
+
+Notice that `jitter` can be a geom itself (i.e. `geom_jitter()`), an argument in `geom_point()` (i.e. `position = "jitter"`), or a position function, (i.e. `position_jitter()`).
+
+## Histograms
+
+```{r}
+iris |> 
+  ggplot(aes(x = Sepal.Width)) + 
+  geom_histogram(binwidth = 0.1)
+```
+
+```{r}
+iris |> 
+  ggplot(aes(x = Sepal.Width)) + 
+  geom_histogram(binwidth = 0.1, 
+                 center = 0.5)
+```
+
+```{r}
+iris |> 
+  ggplot(aes(x = Sepal.Width, 
+             fill = Species)) + 
+  geom_histogram(binwidth = 0.1, 
+                 center = 0.5)
+```
+
+```{r}
+iris |> 
+  ggplot(aes(x = Sepal.Width, 
+             fill = Species)) + 
+  geom_histogram(binwidth = 0.1, 
+                 center = 0.5, 
+                 position = "dodge")
+```
+
+```{r}
+iris |> 
+  ggplot(aes(x = Sepal.Width, 
+             fill = Species)) + 
+  geom_histogram(binwidth = 0.1, 
+                 center = 0.5, 
+                 position = "fill")
+```
+
+## Barplots
+
+![](images/clipboard-1372956476.png)
+
+```{r}
+mtcars |> 
+  ggplot(aes(x = as.factor(cyl))) + 
+  geom_bar()
+```
+
+```{r}
+ToothGrowth |> 
+  ggplot(aes(x = factor(dose), y = len, fill = supp)) +
+  stat_summary(fun = mean, geom = "bar", position = "dodge", width = 0.7) +
+  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", position = position_dodge(0.7), width = 0.25) +
+  labs(title = "Dynamite Plot Example", x = "Dose", y = "Tooth Length") +
+  theme_minimal()
+```
+
+```{r}
+ToothGrowth |> 
+  ggplot(aes(x=factor(dose), y=len, color=supp)) +
+  geom_jitter(position=position_jitter(width=0.2), alpha=0.5) + # Jittered data points
+  stat_summary(fun=mean, geom="point", position=position_dodge(0.7), size=3) +
+  stat_summary(fun.data=mean_cl_normal, geom="errorbar", position=position_dodge(0.7), width=0.25) +
+  labs(title="Plot with Points, Error Bars, and Jittered Data Points", x="Dose", y="Tooth Length") +
+  theme_minimal()
+```
+
+```{r}
+mtcars |> 
+  ggplot(aes(cyl, fill = as.factor(am))) +
+  # Change position to use the functional form, with width 0.2
+  geom_bar(position = position_dodge(width = 1.5), alpha = 0.5)
+```
+
+## Line plot
+
+![](images/clipboard-2110123679.png)
+
+![](images/clipboard-3327103242.png)
