@@ -321,3 +321,102 @@ mtcars |>
 ![](images/clipboard-2110123679.png)
 
 ![](images/clipboard-3327103242.png)
+
+-   Understanding the difference between `geom_bar`, which counts cases in each category, and `geom_col`, which plots pre-summarized values.
+
+-   The significance of the `position` argument in adjusting bar plots, with options like `stack`, `dodge`, and `fill` to alter the plot's layout for clarity and insight.
+
+-   Customizing plots with `position_dodge()` for overlapping bars and employing sequential color palettes to enhance visual appeal and readability.
+
+Exercise: geom line y luego ajustado por población
+
+## Themes
+
+![](images/clipboard-4046359641.png)
+
+![](images/clipboard-2077499016.png)
+
+![](images/clipboard-1025931370.png)
+
+## Wrapping up
+
+```{r}
+economics |> 
+mutate(date2 = case_when(
+    date >= as.Date("2005-01-01") ~ "1",
+    TRUE ~ "0"
+  )) |> 
+  ggplot(aes(x = date, y = uempmed, 
+             color = date2)) +
+  geom_line() +
+  labs(title = "Median Duration of Unemployment",
+       x = "Date",
+       y = "Median Weeks Unemployed")
+```
+
+```{r}
+p <- economics |> 
+mutate(date2 = case_when(
+    date >= as.Date("2005-01-01") ~ "1",
+    TRUE ~ "0"
+  )) |> 
+  ggplot(aes(x = date, y = uempmed, 
+             color = date2)) +
+  geom_line() +
+  labs(title = "Median Duration of Unemployment",
+       x = "Date",
+       y = "Median Weeks Unemployed")
+```
+
+```{r}
+p + 
+  theme_bw()
+```
+
+```{r}
+p + 
+  theme_minimal()
+```
+
+```{r}
+p + 
+  theme_classic()
+```
+
+```{r}
+p + theme_void()
+```
+
+```{r}
+pacman::p_load(ggthemes)
+```
+
+```{r}
+p + 
+  theme_fivethirtyeight()
+```
+
+```{r}
+p + theme_tufte()
+```
+
+```{r}
+p + theme_wsj()
+```
+
+```{r}
+theme_recession <- theme(
+  rect = element_rect(fill = "grey92"),
+  legend.key = element_rect(color = NA),
+  axis.ticks = element_blank(),
+  panel.grid = element_blank(),
+  panel.grid.major.y = element_line(color = "white", size = 0.5, linetype = "dotted"),
+  axis.text = element_text(color = "grey25"),
+  plot.title = element_text(face = "italic", size = 16),
+  legend.position = c(0.6, 0.1)
+)
+```
+
+```{r}
+p + theme_recession
+```
