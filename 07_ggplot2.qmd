@@ -412,11 +412,207 @@ theme_recession <- theme(
   panel.grid = element_blank(),
   panel.grid.major.y = element_line(color = "white", size = 0.5, linetype = "dotted"),
   axis.text = element_text(color = "grey25"),
-  plot.title = element_text(face = "italic", size = 16),
-  legend.position = c(0.6, 0.1)
+  plot.title = element_text(face = "italic", size = 12),
+  legend.position = c(0.9, 0.2)
 )
 ```
 
 ```{r}
 p + theme_recession
+```
+
+# Effective Explanatory Plots
+
+![](images/clipboard-4204059814.png)
+
+```{r}
+pacman::p_load(gapminder)
+```
+
+```{r}
+str(gapminder)
+```
+
+```{r}
+gm2007 <- gapminder |> 
+  filter(year == 2007)
+```
+
+```{r}
+str(gm2007)
+```
+
+```{r}
+gm2007 |> 
+  ggplot(aes(x = lifeExp)) + 
+  geom_histogram()
+```
+
+```{r}
+gapminder |> 
+  group_by(continent, year) |> 
+  summarise(lifeExpAverage = mean(lifeExp)) |> 
+  ggplot(aes(x = year, 
+             y = lifeExpAverage, 
+             color = continent)) + 
+  geom_line()
+```
+
+```{r}
+gapminder |> 
+  group_by(continent, year) |> 
+  summarise(lifeExpAverage = mean(lifeExp)) |> 
+  ggplot(aes(x = year, 
+             y = lifeExpAverage, 
+             color = continent)) + 
+  geom_line() + 
+  facet_grid(. ~ continent ) + 
+  theme(legend.position = "none") + 
+  theme_linedraw()
+```
+
+```{r}
+pacman::p_load(viridis)
+```
+
+```{r}
+# Add a geom_segment() layer
+gm2007 |> 
+  # Create a flag for the six lowest and highest lifeExp values
+  mutate(flag = (row_number(lifeExp) <= 6) | (row_number(desc(lifeExp)) <= 6)) |>
+  # Filter the data to include only the flagged rows
+  filter(flag) |>
+  ggplot( aes(x = lifeExp, y = country, color = lifeExp)) +
+  geom_point(size = 4) +
+  geom_segment(aes(xend = 30, yend = country), size = 2) +
+  geom_text(aes(label = lifeExp), color = "white", size = 1.5) +
+  scale_x_continuous("", expand = c(0,0), limits = c(30, 90), position = "top") +
+  scale_color_viridis(option = "viridis") + 
+    labs(title = "Highest and lowest life expectancies, 2007", 
+  caption = "Source: gapminder")
+  
+```
+
+```{r}
+gm2007 |> 
+  # Create a flag for the six lowest and highest lifeExp values
+  mutate(flag = (row_number(lifeExp) <= 6) | (row_number(desc(lifeExp)) <= 6)) |>
+  # Filter the data to include only the flagged rows
+  filter(flag) |>
+  ggplot( aes(x = lifeExp, y =fct_reorder(country, lifeExp), color = lifeExp)) +
+  geom_point(size = 4) +
+  geom_segment(aes(xend = 30, yend = country), size = 2) +
+  geom_text(aes(label = lifeExp), color = "white", size = 1.5) +
+  scale_x_continuous("", expand = c(0,0), limits = c(30, 90), position = "top") +
+  scale_color_viridis(option = "viridis") + 
+    labs(title = "Highest and lowest life expectancies, 2007", 
+  caption = "Source: gapminder")
+```
+
+## Annotations
+
+```{r}
+p <- gm2007 |> 
+  # Create a flag for the six lowest and highest lifeExp values
+  mutate(flag = (row_number(lifeExp) <= 6) | (row_number(desc(lifeExp)) <= 6)) |>
+  # Filter the data to include only the flagged rows
+  filter(flag) |>
+  ggplot( aes(x = lifeExp, y =fct_reorder(country, lifeExp), color = lifeExp)) +
+  geom_point(size = 4) +
+  geom_segment(aes(xend = 30, yend = country), size = 2) +
+  geom_text(aes(label = lifeExp), color = "white", size = 1.5) +
+  scale_x_continuous("", expand = c(0,0), limits = c(30, 90), position = "top") +
+  scale_color_viridis(option = "viridis") + 
+    labs(title = "Highest and lowest life expectancies, 2007", 
+  caption = "Source: gapminder")
+```
+
+```{r}
+global_mean <- mean(gm2007$lifeExp)
+x_start <- global_mean + 4
+y_start <- 5.5
+x_end <- global_mean
+y_end <- 7.5
+```
+
+```{r}
+p +
+  # Define the theme
+  theme_classic() +
+  theme(
+    axis.line.y = element_blank(),      # Remove y-axis line
+    axis.ticks.y = element_blank(),     # Remove y-axis ticks
+    axis.text = element_text(color = "black"), # Set axis text color to black
+    axis.title = element_blank(),       # Remove axis titles
+    legend.position = "none"            # Remove the legend
+  )
+```
+
+```{r}
+
+p +
+  # Define the theme
+  theme_classic() +
+  theme(
+    axis.line.y = element_blank(),      # Remove y-axis line
+    axis.ticks.y = element_blank(),     # Remove y-axis ticks
+    axis.text = element_text(color = "black"), # Set axis text color to black
+    axis.title = element_blank(),       # Remove axis titles
+    legend.position = "none"            # Remove the legend
+  ) + 
+  geom_vline(xintercept = global_mean, color = "grey40", linetype = 3)
+```
+
+```{r}
+p +
+    theme_classic() +
+  theme(
+    axis.line.y = element_blank(),      # Remove y-axis line
+    axis.ticks.y = element_blank(),     # Remove y-axis ticks
+    axis.text = element_text(color = "black"), # Set axis text color to black
+    axis.title = element_blank(),       # Remove axis titles
+    legend.position = "none"            # Remove the legend
+  ) + 
+  geom_vline(xintercept = global_mean, color = "grey40", linetype = 3) +
+  
+  # annotation
+  
+   annotate(
+    geom = "text",                      # Specify the geometry type
+    x = x_start, y = y_start,
+    label = "The\nglobal\naverage",
+    vjust = 1, size = 3, color = "grey40"
+  )
+```
+
+```{r}
+p +
+    theme_classic() +
+  theme(
+    axis.line.y = element_blank(),      # Remove y-axis line
+    axis.ticks.y = element_blank(),     # Remove y-axis ticks
+    axis.text = element_text(color = "black"), # Set axis text color to black
+    axis.title = element_blank(),       # Remove axis titles
+    legend.position = "none"            # Remove the legend
+  ) + 
+  geom_vline(xintercept = global_mean, color = "grey40", linetype = 3) +
+  
+  # annotation
+  
+   annotate(
+    geom = "text",                      # Specify the geometry type
+    x = x_start, y = y_start,
+    label = "The\nglobal\naverage",
+    vjust = 1, size = 3, color = "grey40"
+  ) + 
+  
+  geom_vline(xintercept = global_mean, color = "grey40", linetype = 3) +
+  
+  annotate(
+    "curve",
+    x = x_start, y = y_start,
+    xend = x_end, yend = y_end,
+arrow = arrow(length = unit(0.2, "cm"), type = "closed"),
+    color = "grey40"
+  )
 ```
