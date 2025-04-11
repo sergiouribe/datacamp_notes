@@ -1,0 +1,13 @@
+---
+title: "08_EDA"
+format: html
+editor: visual
+---
+
+## 
+
+```{r}
+pacman::p_load(tidyverse)
+```
+
+# Histograms
