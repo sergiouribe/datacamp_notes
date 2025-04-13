@@ -10,4 +10,110 @@ editor: visual
 pacman::p_load(tidyverse)
 ```
 
+```{r}
+theme_set(theme_minimal())
+```
+
 # Histograms
+
+# Boxplots
+
+```{r}
+mpg |> 
+  ggplot(aes(x = fct_reorder(class, hwy), y = hwy, fill = as_factor(cyl))) +
+  geom_dotplot(binaxis = "y", stackdir = "center", dotsize = 0.5) +
+  labs(title = "Distribution of Highway Mileage by Car Class",
+       x = "Car Class",
+       y = "Highway Mileage (mpg)", 
+       fill = "Cyl")
+```
+
+```{r}
+mpg |> 
+  ggplot(aes( x = hwy)) + 
+  geom_dotplot()
+```
+
+```{r}
+mpg |> 
+  ggplot(aes(x = 1,  y = hwy)) + 
+  geom_boxplot() + 
+  geom_jitter(width = 0.15, color = "blue", alpha = 0.5) + 
+  coord_flip()
+```
+
+```{r}
+mpg |> 
+  ggplot(aes(x = hwy)) + 
+  geom_density() 
+```
+
+## Measures of center
+
+```{r}
+data(population)
+```
+
+```{r}
+glimpse(population)
+
+```
+
+```{r}
+head(population)
+```
+
+```{r}
+pacman::p_load(gapminder)
+```
+
+```{r}
+data("gapminder")
+```
+
+```{r}
+head(gapminder)
+```
+
+```{r}
+gapminder |> 
+  select(continent, year, lifeExp) |> 
+  group_by(continent, year) |> 
+  summarise(mean_lifeExp = mean(lifeExp)) |> 
+  ggplot(aes(x = year, 
+             y = mean_lifeExp,
+             color = continent)) + 
+  geom_line()
+```
+
+```{r}
+gapminder |> 
+  select(continent, year, pop) |> 
+  group_by(continent, year) |> 
+  summarise(mean_pop = mean(pop)) |> 
+  ggplot(aes(x = year, 
+             y = mean_pop,
+             color = continent)) + 
+  geom_line()
+```
+
+```{r}
+gapminder |> 
+  select(continent, year, pop) |> 
+  group_by(continent, year) |> 
+  summarise(mean_pop = mean(pop)) |> 
+  ggplot(aes(x = year, 
+             y = mean_pop,
+             color = continent)) + 
+  geom_line() + 
+  scale_y_log10()
+```
+
+```{r}
+gapminder |> 
+  filter(year == 2007) |> 
+  ggplot(aes(x = continent, 
+             y = lifeExp)) + 
+  geom_boxplot() + 
+  geom_jitter(width = 0.15, alpha = 0.3)
+```
