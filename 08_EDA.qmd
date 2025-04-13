@@ -117,3 +117,38 @@ gapminder |>
   geom_boxplot() + 
   geom_jitter(width = 0.15, alpha = 0.3)
 ```
+
+```{r}
+gapminder |> 
+  filter(year == 2007) |> 
+  group_by(continent) |> 
+  summarise(n = n(), 
+            mean = mean(pop), 
+            median = quantile(pop, 0.5), 
+            # mode = mode(pop), 
+            var = var(pop), 
+            sd = sd(pop), 
+            IQR = IQR(pop)) |> 
+  mutate(across(where(is.numeric), ~round(.x, 1)))
+```
+
+Center
+
+Variability
+
+Shape
+
+## Outliers
+
+```{r}
+gapminder |> 
+  filter(year == 2007, continent == "Asia") |> 
+  ggplot(aes(x = lifeExp)) + 
+  geom_boxplot()
+```
+
+```{r}
+gapminder |> 
+  filter(year == 2007, continent == "Asia") |> 
+  filter(lifeExp < 50)
+```
