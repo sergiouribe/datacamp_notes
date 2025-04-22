@@ -152,3 +152,17 @@ gapminder |>
   filter(year == 2007, continent == "Asia") |> 
   filter(lifeExp < 50)
 ```
+
+> There is a transition from an **exploratory** plot to a **communication** plot
+
+## Summary
+
+-   Categorical data: use bar charts
+
+-   Facetting
+
+-   Numerical datsa: start with hist, density, boxplot
+
+-   Measures of central, dispersion
+
+-   Group_by
