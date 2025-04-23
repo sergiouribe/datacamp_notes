@@ -31,5 +31,57 @@ mean_mass_samp
 ```
 
 ```{r}
-rm(mean_mass_pop, mean_mass_samp)
+# rm(mean_mass_pop, mean_mass_samp)
 ```
+
+```{r}
+penguins |> 
+  select(body_mass) |> 
+  slice_sample(n = 100) |> 
+  summarise(mean(body_mass, na.rm = T))
+```
+
+```{r}
+penguins |> 
+  select(body_mass) |> 
+  slice_sample(n = 100) |> 
+  summarise(sd(body_mass, na.rm = T))
+```
+
+```{r}
+penguins |> 
+  select(body_mass) |> 
+  slice_sample(n = 10) |> 
+  summarise(mean(body_mass, na.rm = T))
+```
+
+```{r}
+penguins |> 
+  select(body_mass) |> 
+  slice_sample(n = 10) |> 
+  summarise(sd(body_mass, na.rm = T))
+```
+
+```{r}
+penguins |> 
+  select(body_mass) |> 
+  slice_sample(n = 300) |> 
+  ggplot(aes(x = body_mass)) + 
+  geom_histogram(binwidth = 200) +
+  geom_vline(aes(xintercept = mean(body_mass, na.rm = TRUE)), 
+             color = "black", linetype = "dashed", linewidth = 1) +
+  labs(title = "Histogram of Body Mass (g) with Mean Line")
+```
+
+```{r}
+penguins |> 
+  select(body_mass) |> 
+  slice_sample(n = 30) |> 
+  ggplot(aes(x = body_mass)) + 
+  geom_histogram(binwidth = 200) +
+  geom_vline(aes(xintercept = mean(body_mass, na.rm = TRUE)), 
+             color = "black", linetype = "dashed", linewidth = 1) +
+  labs(title = "Histogram of Body Mass (g) with Mean Line")
+```
+
+## Random numbers
