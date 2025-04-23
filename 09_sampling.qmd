@@ -1,0 +1,35 @@
+---
+title: "09_sampling"
+format: html
+editor: visual
+---
+
+```{r}
+pacman::p_load(tidyverse)
+```
+
+```{r}
+# Take a random sample of 100 penguins
+penguins_sample <- penguins %>%
+  slice_sample(n = 100)
+
+# Calculate the mean body mass (in kg) from the full population
+mean_mass_pop <- penguins %>%
+  summarise(mean_body_mass_kg = mean(body_mass, na.rm = TRUE) / 1000)
+
+# Calculate the mean body mass (in kg) from the sample
+mean_mass_samp <- penguins_sample %>%
+  summarise(mean_body_mass_kg = mean(body_mass, na.rm = TRUE) / 1000)
+
+# See the results
+mean_mass_pop
+
+```
+
+```{r}
+mean_mass_samp
+```
+
+```{r}
+rm(mean_mass_pop, mean_mass_samp)
+```
