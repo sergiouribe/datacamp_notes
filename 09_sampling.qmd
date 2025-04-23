@@ -85,3 +85,30 @@ penguins |>
 ```
 
 ## Random numbers
+
+```{r}
+# Generate random numbers from ...
+randoms <- data.frame(
+  # a uniform distribution from -3 to 3
+  uniform = runif(5000, min = -3, max =  3),
+  # a normal distribution with mean 5 and sd 2
+  normal = rnorm(5000, mean = 5, sd = 2)
+)
+```
+
+```{r}
+randoms |>
+  pivot_longer(uniform:normal) |> 
+  ggplot(aes(x = value, 
+             fill = name)) + 
+  geom_histogram()  + 
+  facet_grid(name ~.) + 
+  theme(legend.position = "none")
+```
+
+```{r}
+set.seed(123)
+x <- c(rnorm(5), rnorm(5))
+set.seed(123)
+y <- rnorm(10)
+```
