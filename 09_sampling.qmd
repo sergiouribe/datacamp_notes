@@ -112,3 +112,78 @@ x <- c(rnorm(5), rnorm(5))
 set.seed(123)
 y <- rnorm(10)
 ```
+
+## RECAP
+
+-   **Pseudo-random vs. True Randomness**: True randomness relies on physical processes, such as radioactive decay or atmospheric noise. Pseudo-random numbers, however, are generated algorithmically, based on a seed value, making them faster and more practical for most applications.
+
+-   **Seed Value and Reproducibility**: The seed value initiates the pseudo-random number generation process. By setting a specific seed value using `set.seed()`, you ensure that the same sequence of numbers is generated every time, which is crucial for reproducibility in scientific research and data analysis.
+
+-   **Generating Pseudo-random Numbers in R**: You explored functions like `rnorm()` for generating numbers from a normal distribution. For example, `rnorm(5)` generates five pseudo-random numbers from a normal distribution.
+
+-   **Visualizing Distributions**: Using `ggplot2`, you learned how to visualize the distribution of pseudo-random numbers, enhancing your understanding of statistical distributions and their properties.
+
+Example
+
+```{r}
+# Shuffle the rows of penguins and add row IDs
+penguins_shuffled <- penguins %>%
+  slice_sample(prop = 1) %>%
+  rowid_to_column()
+
+# Plot body_mass_g vs. rowid
+ggplot(penguins_shuffled, aes(rowid, body_mass)) +
+  geom_point() +
+  geom_smooth()
+```
+
+## Stratified and weigthed random sampling
+
+Tip\> using seminjoins to filter: \
+\
+![](images/clipboard-3392166877.png)
+
+![](images/clipboard-3592010481.png)
+
+![](images/clipboard-1165298139.png)
+
+```{r}
+# Count number of penguins by species and calculate percent
+penguins %>% 
+  count(species, sort = TRUE) %>% 
+  mutate(percent = 100 * n / sum(n))
+```
+
+```{r}
+# Use proportional stratified sampling to get 40% of each species group
+penguins_strat <- penguins %>% 
+  group_by(species) %>% 
+  slice_sample(prop = 0.4) %>% 
+  ungroup()
+```
+
+```{r}
+penguins_strat
+```
+
+```{r}
+# Summarize original penguins dataset
+penguins_summary <- penguins %>%
+  count(species, island) %>%
+  mutate(percent_full = 100 * n / sum(n)) %>%
+  select(-n)
+
+# Summarize stratified sample
+penguins_strat_summary <- penguins_strat %>%
+  count(species, island) %>%
+  mutate(percent_strat = 100 * n / sum(n)) %>%
+  select(-n)
+
+# Join the two summaries side-by-side
+penguins_summary %>%
+  full_join(penguins_strat_summary, by = c("species", "island")) |> 
+  mutate(diff = percent_full - percent_strat ) |> 
+  mutate_if(is.numeric, ~ round(., 1))
+
+
+```
