@@ -187,3 +187,148 @@ penguins_summary %>%
 
 
 ```
+
+## recap 2
+
+**Simple Random Sampling** is akin to a lottery draw, where each member of the population has an equal chance of being selected. This method ensures that every possible sample has the same probability of being chosen. You saw how to implement this in R using the slice_sample function, where n specifies the number of items to sample from the dataset.
+
+**Systematic Sampling** involves selecting members from a larger population according to a random starting point and a fixed, periodic interval. This method is useful when dealing with large datasets and provides a simple alternative to random sampling. However, it can introduce bias if the population is not homogeneous. The key steps in R include adding a row ID column with rowid_to_column and then using arithmetic to select rows at regular intervals. For example, to sample every 267th row from a dataset, you could use:
+
+```{r}
+penguins_samp <- penguins %>%
+  rowid_to_column() %>%
+  slice((1:5) * 5)  # Example: pick every 5th row (adjust the number to match your case)
+```
+
+```{r}
+head(penguins_samp)
+```
+
+## Weigthed sample
+
+```{r}
+# Sample 400 employees weighted by Island
+penguins_weight <- penguins %>%
+group_by(island) %>%
+slice_sample(n = 60)
+
+penguins_weight
+```
+
+COmpare
+
+```{r}
+penguins |> 
+  ggplot(aes(x = island, y = body_mass, fill = island)) + 
+  geom_violin() + 
+  geom_boxplot(alpha = 0.5, width = 0.2) + 
+  geom_jitter(alpha = .10, width = 0.2) + 
+  facet_wrap(~species)
+```
+
+```{r}
+penguins_weight |> 
+  ggplot(aes(x = island, y = body_mass, fill = island)) + 
+  geom_violin() + 
+  geom_boxplot(alpha = 0.5, width = 0.2) + 
+  geom_jitter(alpha = .10, width = 0.2)  + 
+  facet_wrap(~species)
+```
+
+```{r}
+ penguins |> 
+   slice_sample(n = 400, weight_by = island) |> 
+     ggplot(aes(x = island, y = body_mass, fill = island)) + 
+  geom_violin() + 
+  geom_boxplot(alpha = 0.5, width = 0.2) + 
+  geom_jitter(alpha = .10, width = 0.2)  + 
+  facet_wrap(~species)
+```
+
+```{r}
+ # 1. Original dataset: mean body_mass by species
+penguins_summary_full <- penguins %>%
+  group_by(species) %>%
+  summarize(mean_body_mass_full = mean(body_mass, na.rm = TRUE))
+
+# 2. Sample of 60 rows (simple random sampling)
+penguins_sample_60 <- penguins %>%
+  slice_sample(n = 60)
+
+penguins_summary_sample_60 <- penguins_sample_60 %>%
+  group_by(species) %>%
+  summarize(mean_body_mass_sample_60 = mean(body_mass, na.rm = TRUE))
+
+# 3. Weighted sample (more weight to heavier penguins)
+penguins_with_weights <- penguins %>%
+  filter(!is.na(body_mass)) %>%
+  mutate(weight = body_mass / sum(body_mass))
+
+penguins_sample_weighted <- penguins_with_weights %>%
+  slice_sample(n = 60, weight_by = weight)
+
+penguins_summary_sample_weighted <- penguins_sample_weighted %>%
+  group_by(species) %>%
+  summarize(mean_body_mass_weighted = mean(body_mass, na.rm = TRUE))
+
+penguins_summary_all <- penguins_summary_full %>%
+  left_join(penguins_summary_sample_60, by = "species") %>%
+  left_join(penguins_summary_sample_weighted, by = "species") %>%
+  mutate_if(is.numeric, ~ round(., 1))
+
+# 5. View the combined table
+penguins_summary_all
+
+
+```
+
+```{r}
+# 1. Original full dataset
+penguins_full <- penguins %>%
+  mutate(sample_type = "Full Dataset")
+
+# 2. Random sample of 60 penguins
+penguins_sample_60 <- penguins %>%
+  slice_sample(n = 60) %>%
+  mutate(sample_type = "Random Sample (60)")
+
+# 3. Weighted sample of 60 penguins
+penguins_with_weights <- penguins %>%
+  filter(!is.na(body_mass)) %>%
+  mutate(weight = body_mass / sum(body_mass))
+
+penguins_sample_weighted <- penguins_with_weights %>%
+  slice_sample(n = 60, weight_by = weight) %>%
+  mutate(sample_type = "Weighted Sample (60)")
+
+# 4. Combine all datasets
+penguins_all <- bind_rows(
+  penguins_full,
+  penguins_sample_60,
+  penguins_sample_weighted
+)
+
+# 5. Create the violin plot
+penguins_all %>%
+  filter(!is.na(body_mass)) %>%
+  ggplot(aes(x = species, y = body_mass, fill = sample_type)) +
+  geom_violin(position = position_dodge(width = 0.8), trim = FALSE) +
+  geom_boxplot(alpha = 0.5) + 
+  labs(
+    title = "Distribution of Body Mass by Species and Sampling Method",
+    x = "Species",
+    y = "Body Mass (g)",
+    fill = "Sample Type"
+  ) +
+  theme_minimal()
+```
+
+## Cluster sampling
+
+The main benefit of cluster sampling over stratified sampling is that you can save time or money by not including every subgroup in your sample.
+
+![](images/clipboard-2895803311.png)
+
+![](images/clipboard-2237486178.png)
+
+![![](images/clipboard-2464283811.png)](images/clipboard-2503248034.png)
