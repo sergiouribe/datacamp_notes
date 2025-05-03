@@ -332,5 +332,3 @@ The main benefit of cluster sampling over stratified sampling is that you can sa
 ![](images/clipboard-2237486178.png)
 
 ![![](images/clipboard-2464283811.png)](images/clipboard-2503248034.png)
-
-\# delete 29 apr
