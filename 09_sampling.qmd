@@ -560,3 +560,23 @@ dice <- expand_grid(
 ggplot(dice, aes(factor(mean_roll))) + geom_bar()
 
 ```
+
+# Central Theorem Limit
+
+-   The difference between exact and approximate sampling distributions. Exact sampling distributions account for every possible outcome of an experiment, while approximate sampling distributions use simulations to estimate these outcomes.
+
+-   Generating all possible combinations of dice rolls to understand exact sampling distributions. For example, with four six-sided dice, there are (6\^4) possible outcomes.
+
+-   Using the `tidyr` package to create these combinations and the `ggplot2` package to visualize the distribution of the mean rolls.
+
+-   The computational challenge of calculating exact sampling distributions for large datasets, necessitating the use of approximations.
+
+-   Simulating approximate sampling distributions by repeating a procedure multiple times. This involves using the `sample` function with `replace = TRUE` and the `replicate` function to generate many sample means.
+
+For instance, to generate a sample mean of four dice rolls and replicate this process a thousand times, you wrapped the expression in braces and stored the results in a tibble for visualization:
+
+```         
+replicate(1000, expr = {
+  sample_mean <- mean(sample(1:6, size = 4, replace = TRUE))
+})
+```
