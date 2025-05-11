@@ -580,3 +580,23 @@ replicate(1000, expr = {
   sample_mean <- mean(sample(1:6, size = 4, replace = TRUE))
 })
 ```
+
+-   **Sampling Distributions:** You learned that a sampling distribution represents the distribution of a statistic (like the mean) across multiple samples from the same population.
+
+-   **Central Limit Theorem:** The CLT states that the distribution of sample means approaches a normal distribution as the sample size increases, regardless of the population's distribution. This was illustrated through histograms showing how the distribution becomes more bell-shaped and narrower with larger sample sizes.
+
+-   **Standard Errors:** You discovered that the standard deviation of the sampling distribution (standard error) decreases as the sample size increases. This concept was demonstrated with the formula for estimating the standard deviation of the sampling distribution: the population standard deviation divided by the square root of the sample size.
+
+-   **Mean of Sampling Distributions:** The lesson showed that the mean of a sampling distribution is close to the population mean, reinforcing the accuracy of sampling as a method for estimating population parameters.
+
+An example code snippet from the lesson:
+
+```         
+mean(sampling_distribution_50)
+```
+
+This code calculates the mean of the sample means from a sampling distribution with a sample size of 50, demonstrating how sample statistics can estimate population parameter
+
+## Bootstrapping
+
+![](images/clipboard-4237702250.png)
