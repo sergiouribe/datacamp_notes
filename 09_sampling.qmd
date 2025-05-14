@@ -604,3 +604,5 @@ This code calculates the mean of the sample means from a sampling distribution w
 ![![](images/clipboard-1335555381.png)](images/clipboard-2088987679.png)
 
 The bootstrapping workflow is to generate a resample of the same size as the population, calculate a summary statistic, then repeat this to get a distribution of summary statistics.
+
+The key to deciding whether to sample without or with replacement is whether or not your dataset is best thought of as being the whole population or not.
