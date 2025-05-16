@@ -607,4 +607,63 @@ The bootstrapping workflow is to generate a resample of the same size as the pop
 
 The key to deciding whether to sample without or with replacement is whether or not your dataset is best thought of as being the whole population or not.
 
-DELETE THIS: May 15
+# **Generating a bootstrap distribution**
+
+The process for generating a bootstrap distribution is remarkably similar to the process for generating a sampling distribution; only the first step is different.
+
+To make a sampling distribution, you start with the population and sample without replacement. To make a bootstrap distribution, you start with a sample and sample that with replacement. After that, the steps are the same: calculate the summary statistic that you are interested in on that sample/resample, then replicate the process many times. In each case, you can visualize the distribution with a histogram.
+
+![](images/clipboard-3028028161.png)
+
+![![](images/clipboard-3679918081.png)](images/clipboard-1596924573.png)
+
+The mean of the boostrap is usually identical to the sample mean .
+
+![](images/clipboard-1072410808.png)
+
+So, the bootstrap is not so good estimating means, but is very good estimating SD.
+
+### Bootstrapping
+
+```{r}
+# Generate a sampling distribution
+mean_body_mass_2000_samp <- replicate(
+  # Use 2000 replicates
+  n = 2000,
+  expr = {
+    # Start with the population
+    penguins %>%
+      filter(!is.na(body_mass)) %>%  # remove NAs to avoid errors
+      # Sample 100 rows without replacement (adjust if nrow < 500)
+      slice_sample(n = 100, replace = FALSE) %>%
+      # Calculate the mean body mass
+      summarise(mean_body_mass = mean(body_mass)) %>%
+      # Pull out the mean
+      pull(mean_body_mass)
+  }
+)
+
+# See the result
+mean_body_mass_2000_samp
+```
+
+```{r}
+# Calculate the true population mean popularity
+pop_mean <- mean(spotify_population$popularity)
+
+
+# Calculate the original sample mean popularity
+samp_mean <- mean(spotify_sample$popularity)
+
+
+# Calculate the sampling dist'n estimate of mean popularity
+samp_distn_mean <- mean(sampling_distribution$sample_mean)
+
+
+# Calculate the bootstrap dist'n estimate of mean popularity
+boot_distn_mean <- mean(bootstrap_distribution$resample_mean)
+
+
+# See the results
+c(pop = pop_mean, samp = samp_mean, sam_distn = samp_distn_mean, boot_distn = boot_distn_mean)
+```
