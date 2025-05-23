@@ -649,4 +649,3 @@ boot_distn_mean <- mean(bootstrap_distribution$resample_mean)
 c(pop = pop_mean, samp = samp_mean, sam_distn = samp_distn_mean, boot_distn = boot_distn_mean)
 ```
 
-Remove: 19 mayo 2025
