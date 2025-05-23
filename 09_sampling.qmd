@@ -5,7 +5,12 @@ editor: visual
 ---
 
 ```{r}
-pacman::p_load(tidyverse)
+# Load required packages
+pacman::p_load(tidyverse, 
+               palmerpenguins)  # Added palmerpenguins package
+
+# Load the dataset
+data(penguins)
 ```
 
 ```{r}
@@ -15,11 +20,11 @@ penguins_sample <- penguins %>%
 
 # Calculate the mean body mass (in kg) from the full population
 mean_mass_pop <- penguins %>%
-  summarise(mean_body_mass_kg = mean(body_mass, na.rm = TRUE) / 1000)
+  summarise(mean_body_mass_g_kg = mean(body_mass_g, na.rm = TRUE) / 1000)
 
 # Calculate the mean body mass (in kg) from the sample
 mean_mass_samp <- penguins_sample %>%
-  summarise(mean_body_mass_kg = mean(body_mass, na.rm = TRUE) / 1000)
+  summarise(mean_body_mass_g_kg = mean(body_mass_g, na.rm = TRUE) / 1000)
 
 # See the results
 mean_mass_pop
@@ -36,50 +41,50 @@ mean_mass_samp
 
 ```{r}
 penguins |> 
-  select(body_mass) |> 
+  select(body_mass_g) |> 
   slice_sample(n = 100) |> 
-  summarise(mean(body_mass, na.rm = T))
+  summarise(mean(body_mass_g, na.rm = T))
 ```
 
 ```{r}
 penguins |> 
-  select(body_mass) |> 
+  select(body_mass_g) |> 
   slice_sample(n = 100) |> 
-  summarise(sd(body_mass, na.rm = T))
+  summarise(sd(body_mass_g, na.rm = T))
 ```
 
 ```{r}
 penguins |> 
-  select(body_mass) |> 
+  select(body_mass_g) |> 
   slice_sample(n = 10) |> 
-  summarise(mean(body_mass, na.rm = T))
+  summarise(mean(body_mass_g, na.rm = T))
 ```
 
 ```{r}
 penguins |> 
-  select(body_mass) |> 
+  select(body_mass_g) |> 
   slice_sample(n = 10) |> 
-  summarise(sd(body_mass, na.rm = T))
+  summarise(sd(body_mass_g, na.rm = T))
 ```
 
 ```{r}
 penguins |> 
-  select(body_mass) |> 
+  select(body_mass_g) |> 
   slice_sample(n = 300) |> 
-  ggplot(aes(x = body_mass)) + 
+  ggplot(aes(x = body_mass_g)) + 
   geom_histogram(binwidth = 200) +
-  geom_vline(aes(xintercept = mean(body_mass, na.rm = TRUE)), 
+  geom_vline(aes(xintercept = mean(body_mass_g, na.rm = TRUE)), 
              color = "black", linetype = "dashed", linewidth = 1) +
   labs(title = "Histogram of Body Mass (g) with Mean Line")
 ```
 
 ```{r}
 penguins |> 
-  select(body_mass) |> 
+  select(body_mass_g) |> 
   slice_sample(n = 30) |> 
-  ggplot(aes(x = body_mass)) + 
+  ggplot(aes(x = body_mass_g)) + 
   geom_histogram(binwidth = 200) +
-  geom_vline(aes(xintercept = mean(body_mass, na.rm = TRUE)), 
+  geom_vline(aes(xintercept = mean(body_mass_g, na.rm = TRUE)), 
              color = "black", linetype = "dashed", linewidth = 1) +
   labs(title = "Histogram of Body Mass (g) with Mean Line")
 ```
@@ -131,8 +136,8 @@ penguins_shuffled <- penguins %>%
   slice_sample(prop = 1) %>%
   rowid_to_column()
 
-# Plot body_mass_g vs. rowid
-ggplot(penguins_shuffled, aes(rowid, body_mass)) +
+# Plot body_mass_g_g vs. rowid
+ggplot(penguins_shuffled, aes(rowid, body_mass_g)) +
   geom_point() +
   geom_smooth()
 ```
@@ -219,7 +224,7 @@ COmpare
 
 ```{r}
 penguins |> 
-  ggplot(aes(x = island, y = body_mass, fill = island)) + 
+  ggplot(aes(x = island, y = body_mass_g, fill = island)) + 
   geom_violin() + 
   geom_boxplot(alpha = 0.5, width = 0.2) + 
   geom_jitter(alpha = .10, width = 0.2) + 
@@ -228,7 +233,7 @@ penguins |>
 
 ```{r}
 penguins_weight |> 
-  ggplot(aes(x = island, y = body_mass, fill = island)) + 
+  ggplot(aes(x = island, y = body_mass_g, fill = island)) + 
   geom_violin() + 
   geom_boxplot(alpha = 0.5, width = 0.2) + 
   geom_jitter(alpha = .10, width = 0.2)  + 
@@ -238,7 +243,7 @@ penguins_weight |>
 ```{r}
  penguins |> 
    slice_sample(n = 400, weight_by = island) |> 
-     ggplot(aes(x = island, y = body_mass, fill = island)) + 
+     ggplot(aes(x = island, y = body_mass_g, fill = island)) + 
   geom_violin() + 
   geom_boxplot(alpha = 0.5, width = 0.2) + 
   geom_jitter(alpha = .10, width = 0.2)  + 
@@ -246,40 +251,16 @@ penguins_weight |>
 ```
 
 ```{r}
- # 1. Original dataset: mean body_mass by species
+# 1. Original dataset: mean body_mass_g by species
 penguins_summary_full <- penguins %>%
   group_by(species) %>%
-  summarize(mean_body_mass_full = mean(body_mass, na.rm = TRUE))
+  summarise(
+    mean_mass = mean(body_mass_g, na.rm = TRUE),
+    n = n()
+  )
 
-# 2. Sample of 60 rows (simple random sampling)
-penguins_sample_60 <- penguins %>%
-  slice_sample(n = 60)
-
-penguins_summary_sample_60 <- penguins_sample_60 %>%
-  group_by(species) %>%
-  summarize(mean_body_mass_sample_60 = mean(body_mass, na.rm = TRUE))
-
-# 3. Weighted sample (more weight to heavier penguins)
-penguins_with_weights <- penguins %>%
-  filter(!is.na(body_mass)) %>%
-  mutate(weight = body_mass / sum(body_mass))
-
-penguins_sample_weighted <- penguins_with_weights %>%
-  slice_sample(n = 60, weight_by = weight)
-
-penguins_summary_sample_weighted <- penguins_sample_weighted %>%
-  group_by(species) %>%
-  summarize(mean_body_mass_weighted = mean(body_mass, na.rm = TRUE))
-
-penguins_summary_all <- penguins_summary_full %>%
-  left_join(penguins_summary_sample_60, by = "species") %>%
-  left_join(penguins_summary_sample_weighted, by = "species") %>%
-  mutate_if(is.numeric, ~ round(., 1))
-
-# 5. View the combined table
-penguins_summary_all
-
-
+# Display the summary
+penguins_summary_full
 ```
 
 ```{r}
@@ -294,8 +275,8 @@ penguins_sample_60 <- penguins %>%
 
 # 3. Weighted sample of 60 penguins
 penguins_with_weights <- penguins %>%
-  filter(!is.na(body_mass)) %>%
-  mutate(weight = body_mass / sum(body_mass))
+  filter(!is.na(body_mass_g)) %>%
+  mutate(weight = body_mass_g / sum(body_mass_g))
 
 penguins_sample_weighted <- penguins_with_weights %>%
   slice_sample(n = 60, weight_by = weight) %>%
@@ -310,8 +291,8 @@ penguins_all <- bind_rows(
 
 # 5. Create the violin plot
 penguins_all %>%
-  filter(!is.na(body_mass)) %>%
-  ggplot(aes(x = species, y = body_mass, fill = sample_type)) +
+  filter(!is.na(body_mass_g)) %>%
+  ggplot(aes(x = species, y = body_mass_g, fill = sample_type)) +
   geom_violin(position = position_dodge(width = 0.8), trim = FALSE) +
   geom_boxplot(alpha = 0.5) + 
   labs(
@@ -366,7 +347,7 @@ top_islands <- c("Biscoe", "Dream", "Torgersen")
 
 # Filter the main dataset
 penguins_top <- penguins %>%
-  filter(island %in% top_islands, !is.na(body_mass))
+  filter(island %in% top_islands, !is.na(body_mass_g))
 ```
 
 ```{r}
@@ -399,13 +380,13 @@ penguins_clust <- penguins_top %>%
 bind_rows(
   # Simple random sample
   penguins %>%
-    filter(island %in% c("Biscoe", "Dream", "Torgersen"), !is.na(body_mass)) %>%
+    filter(island %in% c("Biscoe", "Dream", "Torgersen"), !is.na(body_mass_g)) %>%
     slice_sample(prop = 1/3) %>%
     mutate(sample_type = "Simple Random"),
 
   # Stratified sample by species
   penguins %>%
-    filter(island %in% c("Biscoe", "Dream", "Torgersen"), !is.na(body_mass)) %>%
+    filter(island %in% c("Biscoe", "Dream", "Torgersen"), !is.na(body_mass_g)) %>%
     group_by(species) %>%
     slice_sample(prop = 1/3) %>%
     ungroup() %>%
@@ -415,14 +396,14 @@ bind_rows(
   {
     selected_islands <- sample(c("Biscoe", "Dream", "Torgersen"), size = 2)
     penguins %>%
-      filter(island %in% selected_islands, !is.na(body_mass)) %>%
+      filter(island %in% selected_islands, !is.na(body_mass_g)) %>%
       group_by(island) %>%
       slice_sample(n = floor(nrow(penguins) / 6)) %>%
       ungroup() %>%
       mutate(sample_type = "Cluster")
   }
 ) %>%
-  ggplot(aes(x = species, y = body_mass, fill = sample_type)) +
+  ggplot(aes(x = species, y = body_mass_g, fill = sample_type)) +
   geom_violin(position = position_dodge(width = 0.8), trim = FALSE) +
   labs(
     title = "Comparison of Sampling Techniques on Penguin Body Mass",
@@ -453,29 +434,29 @@ penguins_clust <- penguins %>%
 ```{r}
 bind_rows(
   penguins %>%
-    filter(!is.na(body_mass)) %>%
+    filter(!is.na(body_mass_g)) %>%
     mutate(sample_type = "Full"),
   
   penguins_clust %>%
-    filter(!is.na(body_mass)) %>%
+    filter(!is.na(body_mass_g)) %>%
     mutate(sample_type = "Cluster Sample")
 ) %>%
   group_by(sample_type, species) %>%
-  summarize(mean_body_mass = round(mean(body_mass), 1), .groups = "drop") %>%
+  summarize(mean_body_mass_g = round(mean(body_mass_g), 1), .groups = "drop") %>%
   arrange(sample_type, species)
 ```
 
 ```{r}
 bind_rows(
   penguins %>%
-    filter(!is.na(body_mass)) %>%
+    filter(!is.na(body_mass_g)) %>%
     mutate(sample_type = "Full"),
 
   penguins_clust %>%
-    filter(!is.na(body_mass)) %>%
+    filter(!is.na(body_mass_g)) %>%
     mutate(sample_type = "Cluster Sample")
 ) %>%
-  ggplot(aes(x = species, y = body_mass, fill = sample_type)) +
+  ggplot(aes(x = species, y = body_mass_g, fill = sample_type)) +
   geom_violin(position = position_dodge(width = 0.8), alpha = 0.6, trim = FALSE) +
   geom_jitter(aes(color = sample_type), position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.8), size = 1.5, alpha = 0.6) +
   geom_boxplot(alpha = 0.2, width = 0.2) +
@@ -627,24 +608,24 @@ So, the bootstrap is not so good estimating means, but is very good estimating S
 
 ```{r}
 # Generate a sampling distribution
-mean_body_mass_2000_samp <- replicate(
+mean_body_mass_g_2000_samp <- replicate(
   # Use 2000 replicates
   n = 2000,
   expr = {
     # Start with the population
     penguins %>%
-      filter(!is.na(body_mass)) %>%  # remove NAs to avoid errors
+      filter(!is.na(body_mass_g)) %>%  # remove NAs to avoid errors
       # Sample 100 rows without replacement (adjust if nrow < 500)
       slice_sample(n = 100, replace = FALSE) %>%
       # Calculate the mean body mass
-      summarise(mean_body_mass = mean(body_mass)) %>%
+      summarise(mean_body_mass_g = mean(body_mass_g)) %>%
       # Pull out the mean
-      pull(mean_body_mass)
+      pull(mean_body_mass_g)
   }
 )
 
 # See the result
-mean_body_mass_2000_samp
+mean_body_mass_g_2000_samp
 ```
 
 ```{r}
