@@ -11,3 +11,7 @@ pacman::p_load(tidyverse)
 ```{r}
 
 ```
+
+![![](images/clipboard-3361331156.png)](images/clipboard-3096119592.png)
+
+![![](images/clipboard-1328109182.png)](images/clipboard-3821990180.png)
