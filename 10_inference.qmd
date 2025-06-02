@@ -8,10 +8,38 @@ editor: visual
 pacman::p_load(tidyverse)
 ```
 
-```{r}
-
-```
-
 ![![](images/clipboard-3361331156.png)](images/clipboard-3096119592.png)
 
 ![![](images/clipboard-1328109182.png)](images/clipboard-3821990180.png)
+
+he importance of hypothesis testing and its application in real-world scenarios. Hypothesis testing helps determine if the observed differences in data are meaningful or due to random chance. Here are the key points you covered:
+
+-   **A/B Testing**: You explored how Electronic Arts used A/B testing to compare two versions of a web page to see which one resulted in higher pre-orders for SimCity 5. This method helps in making data-driven decisions by comparing outcomes of different scenarios.
+
+-   **Sample Mean Calculation**: You learned to calculate the sample mean, which is a type of point estimate. For example, you calculated the mean annual compensation of data scientists from a survey dataset.
+
+-   **Bootstrap Distribution**: You generated a bootstrap distribution of sample means by resampling the dataset multiple times. This distribution helps estimate the standard error of the sample statistic.
+
+-   **Z-Scores**: You standardized values using z-scores, which indicate how many standard deviations a sample statistic is from the hypothesized parameter value. For instance, you calculated the z-score for the proportion of late shipments.
+
+Here's an example of calculating a z-score:
+
+```         
+# Hypothesize that the proportion is 6%
+late_prop_hyp <- 0.06
+
+# Calculate the standard error
+std_error <- late_shipments_boot_distn %>% 
+  summarize(sd_late_prop = sd(late_prop)) %>% 
+  pull(sd_late_prop)
+
+# Find z-score of late_prop_samp
+z_score <- (late_prop_samp - late_prop_hyp) / std_error
+
+# See the results
+z_score
+```
+
+![](images/clipboard-1430535133.png)
+
+![](images/clipboard-2376425064.png)
