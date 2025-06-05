@@ -1,0 +1,98 @@
+---
+title: "risks vs odds"
+format: html
+editor: visual
+---
+
+```{r}
+# load necessary packages
+pacman::p_load(tidyverse, logbin, gtsummary, emmeans, 
+               equatiomatic)
+
+
+```
+
+```{r}
+
+# get the data
+ts <- carData::TitanicSurvival
+
+```
+
+```{r}
+
+set.seed(123) # for reproducibility
+
+
+```
+
+```{r}
+d <- rbind(
+  # 100 females
+  ts %>% filter(sex == "female" & survived == "yes") %>% sample_n(7),
+  ts %>% filter(sex == "female" & survived == "no") %>% sample_n(3),
+  # 100 males
+  ts %>% filter(sex == "male" & survived == "yes") %>% sample_n(2),
+  ts %>% filter(sex == "male" & survived == "no") %>% sample_n(8)
+)
+
+# get frequency table
+xtabs(data = d, ~ survived + sex)
+```
+
+```{r}
+# fit log-binomial model
+m <- glm(survived ~ sex, 
+         data = d, 
+         family = binomial)
+```
+
+```{r}
+gtsummary::tbl_regression(m)
+```
+
+```{r}
+m2 <- logbin::logbin(survived ~ sex, 
+                     data = d)
+```
+
+```{r}
+gtsummary::tbl_regression(m2)
+```
+
+```{r}
+logistic_model <- tbl_regression(
+  m,
+  exponentiate = TRUE,
+  add_pairwise_contrasts = T,
+  weights = "prop",
+  pairwise_reverse = F
+)
+
+logbinomial_model <- tbl_regression(
+  m2,
+  exponentiate = TRUE,
+  add_pairwise_contrasts = T,
+  weights = "prop",
+  pairwise_reverse = F
+)
+
+final_table <- tbl_merge(
+  tbls = list(logistic_model, logbinomial_model),
+  tab_spanner = c("logistic", "log-binomial")
+)
+
+final_table
+```
+
+```{r}
+equatiomatic::extract_eq(m)
+```
+
+```{r}
+equatiomatic::extract_eq(m2)
+```
+
+# Conversion
+
+![](images/clipboard-2128219242.png)
