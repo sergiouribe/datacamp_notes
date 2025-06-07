@@ -43,3 +43,11 @@ z_score
 ![](images/clipboard-1430535133.png)
 
 ![](images/clipboard-2376425064.png)
+
+-   **p-values**: These quantify the evidence against the null hypothesis. A small p-value suggests rejecting the null hypothesis in favor of the alternative hypothesis, while a large p-value suggests sticking with the null hypothesis.
+
+-   **Significance Level (α)**: This is the cutoff point for deciding whether a p-value is small or large. Common choices are 0.05, 0.10, and 0.01. If the p-value is less than or equal to α, you reject the null hypothesis.
+
+-   **Confidence Intervals**: These provide a range of plausible values for a population parameter. For a significance level of 0.05, a 95% confidence interval is used.
+
+-   **Type I and Type II Errors**: Type I errors (false positives) occur when the null hypothesis is incorrectly rejected. Type II errors (false negatives) occur when the null hypothesis is incorrectly accepted.
