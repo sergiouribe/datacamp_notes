@@ -51,3 +51,23 @@ z_score
 -   **Confidence Intervals**: These provide a range of plausible values for a population parameter. For a significance level of 0.05, a 95% confidence interval is used.
 
 -   **Type I and Type II Errors**: Type I errors (false positives) occur when the null hypothesis is incorrectly rejected. Type II errors (false negatives) occur when the null hypothesis is incorrectly accepted.
+
+![](images/clipboard-3386067985.png)
+
+## t-test
+
+```{r}
+# Calculate the numerator of the test statistic
+numerator <- (xbar_no - xbar_yes)
+
+# Calculate the denominator of the test statistic
+denominator <- sqrt( (s_no ^ 2 / n_no) + (s_yes^ 2 / n_yes))
+
+# Calculate the test statistic
+t_stat <- numerator / denominator
+
+# See the result
+t_stat
+```
+
+![![](images/clipboard-2487474175.png)](images/clipboard-3283527699.png)
