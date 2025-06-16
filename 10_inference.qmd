@@ -71,3 +71,11 @@ t_stat
 ```
 
 ![![](images/clipboard-2487474175.png)](images/clipboard-3283527699.png)
+
+## t-test paired
+
+![](images/clipboard-863783114.png)
+
+![](images/clipboard-1761918466.png)
+
+![](images/clipboard-2344372318.png)
