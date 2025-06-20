@@ -79,3 +79,36 @@ t_stat
 ![](images/clipboard-1761918466.png)
 
 ![](images/clipboard-2344372318.png)
+
+## Two samples and ANOVA
+
+-   **ANOVA Tests**: You explored how ANOVA (Analysis of Variance) tests can be used to check if there are differences in means across more than two groups. For example, to test if mean annual compensation differs by job satisfaction levels, you fit a linear regression model and then performed an ANOVA test.
+
+    -   **Code Example**:
+
+        ```         
+        model <- lm(compensation ~ job_satisfaction, data = survey_data)
+        anova_result <- anova(model)
+        ```
+
+    -   The p-value in the ANOVA result indicates if there are significant differences between the groups.
+
+-   **Visualizing Data**: Before conducting tests, you visualized the distributions of the numeric variable using box plots. This helps in understanding the data better.
+
+    -   **Code Example**:
+
+        ```         
+        ggplot(late_shipments, aes(x = shipment_mode, y = pack_price)) +
+          geom_boxplot() +
+          coord_flip()
+        ```
+
+-   **Pairwise t-tests**: Since ANOVA doesn't specify which groups differ, you used pairwise t-tests to compare each pair of categories. This involves running multiple tests and adjusting p-values to control for false positives.
+
+    -   **Code Example**:
+
+        ```         
+        pairwise.t.test(late_shipments$pack_price, late_shipments$shipment_mode, p.adjust.method = "holm")
+        ```
+
+-   **P-value Adjustments**: You learned about different methods to adjust p-values, like the Bonferroni and Holm adjustments, to reduce the risk of false positives when conducting multiple tests.
