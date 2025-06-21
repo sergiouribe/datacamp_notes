@@ -112,3 +112,7 @@ t_stat
         ```
 
 -   **P-value Adjustments**: You learned about different methods to adjust p-values, like the Bonferroni and Holm adjustments, to reduce the risk of false positives when conducting multiple tests.
+
+## RECAP
+
+![](images/clipboard-836899424.png)
