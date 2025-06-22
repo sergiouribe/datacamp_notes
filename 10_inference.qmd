@@ -116,3 +116,43 @@ t_stat
 ## RECAP
 
 ![](images/clipboard-836899424.png)
+
+-   **Population Proportion (p)**: This is the unknown parameter we are trying to estimate.
+
+-   **Sample Proportion (p-hat)**: This is the proportion observed in your sample.
+
+-   **Hypothesized Proportion (p-zero)**: This is the value you are testing against.
+
+You also learned how to calculate the standardized test statistic (z-score) for one-sample proportion tests without using bootstrap distributions:
+
+-   **Z-score Calculation**:
+
+    -   Formula: ( z = \\dfrac{\\hat{p} - p\_{0}}{\\sqrt{\\dfrac{p\_{0} \\cdot (1 - p\_{0})}{n}}} )
+
+    -   This uses the sample proportion (p-hat), hypothesized proportion (p-zero), and sample size (n).
+
+-   **P-value Calculation**:
+
+    -   For left-tailed tests, use `pnorm(z, lower.tail = TRUE)`.
+
+    -   For right-tailed tests, use `pnorm(z, lower.tail = FALSE)`.
+
+    -   For two-tailed tests, double the left-tailed p-value.
+
+You explored why a z-test is used for proportions instead of a t-test, noting that proportions only require one estimate, reducing uncertainty.
+
+Here’s an example code snippet for calculating the z-score:
+
+```         
+p_hat <- 0.55  # Sample proportion
+p_zero <- 0.50  # Hypothesized proportion
+n <- 100  # Sample size
+
+z <- (p_hat - p_zero) / sqrt((p_zero * (1 - p_zero)) / n)
+```
+
+This calculation helps you determine if the observed proportion significantly differs from the hypothesized value.
+
+## Proportion test
+
+![](images/clipboard-3322735916.png)
